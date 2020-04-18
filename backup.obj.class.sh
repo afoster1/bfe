@@ -15,8 +15,6 @@ backup.obj.init(){
 
 backup.obj.showDescription() {
     backup.system.stdout.printMessageAndValue "Backup Name: " ${backup.obj_args}.backupName
-    # TODO ANFO Remove example below
-    #local backupName=`${args_}.backupName`
 }
 
 backup.obj.filename() { backup.system.utils.propertyAccessor backup.obj_properties $1 $2

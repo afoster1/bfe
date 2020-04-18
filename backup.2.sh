@@ -17,5 +17,7 @@ args.showArguments
 backup.obj myobject args
 myobject.showDescription
 myobject.filename = "file1"
-echo `myobject.filename`
 
+# Create a backup descriptions object
+backup.descriptions descriptions args
+descriptions.load
