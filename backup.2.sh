@@ -3,19 +3,19 @@
 # Define all the types
 . backup.types.sh
 
-# create class object
-backup.obj myobject
-myobject.sayHello
-myobject.fileName = "file1"
-
+# Read backup arguments
 backup.arguments args
 args.parse "$@"
+args.showArguments
 
-backup.system.stdout.printString "Configuration Filename"
-backup.system.stdout.printValue args.configFilename
+# Example of setting an array from the script
+# a=("sdf" "jkl")
+# array="$(declare -p a)"
+# args.actions = "\${array}"
 
-backup.system.stdout.printString "Passphrase Filename"
-backup.system.stdout.printValue args.passphraseFilename
+# create class object
+backup.obj myobject args
+myobject.showDescription
+myobject.filename = "file1"
+echo `myobject.filename`
 
-backup.system.stdout.printString "..."
-backup.system.stdout.printValue args.sendEmail

@@ -1,30 +1,23 @@
 # Class named "backup.obj" for bash Object
 
-# property
+# collection of property values
 backup.obj_properties=()
 
 # properties IDs
-fileName=0
-fileSize=1
+filename=0
 
-backup.obj.sayHello(){
-    echo Hello
+# fields
+backup.obj_args= 
+
+backup.obj.init(){
+    backup.obj_args=$1
 }
 
-backup.obj.property(){
-    if [ "$2" == "=" ]
-    then
-        backup.obj_properties[$1]=$3
-    else
-        echo ${backup.obj_properties[$1]}
-    fi
+backup.obj.showDescription() {
+    backup.system.stdout.printMessageAndValue "Backup Name: " ${backup.obj_args}.backupName
+    # TODO ANFO Remove example below
+    #local backupName=`${args_}.backupName`
 }
 
-backup.obj.fileName(){
-    if [ "$1" == "=" ]
-    then
-        backup.obj.property fileName = $2
-    else
-        backup.obj.property fileName
-    fi
+backup.obj.filename() { backup.system.utils.propertyAccessor backup.obj_properties $1 $2
 }

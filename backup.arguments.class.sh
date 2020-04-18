@@ -22,68 +22,60 @@ backup.arguments_backupSubDir=14
 backup.arguments_restoreSubDir=15
 backup.arguments_logSubDir=16
 backup.arguments_backupName=17
-backup.arguments_actions=18
-backup.arguments_backupGroups=19
+backup.arguments_actions=array18
+backup.arguments_backupGroups=array19
 backup.arguments_fullBackup=20
 backup.arguments_useLog=21
 backup.arguments_dryRun=22
 
-backup.arguments.property()
-{
-    name=backup.arguments_$(echo "${FUNCNAME[1]}" | sed "s/.*\.\(.*\)$/\1/g") 
-    if [ "$1" == "=" ]
-    then
-        backup.arguments_properties[${name}]=$2
-    else
-        echo ${backup.arguments_properties[${name}]}
-    fi
-}
+backup.arguments_actionsArray=()
+backup.arguments_backupGroupsArray=()
 
-backup.arguments.configFilename() { backup.arguments.property $1 $2
+backup.arguments.configFilename() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.passphraseFilename() { backup.arguments.property $1 $2
+backup.arguments.passphraseFilename() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.passphrase() { backup.arguments.property $1 $2
+backup.arguments.passphrase() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.emailPasswordFilename() { backup.arguments.property $1 $2
+backup.arguments.emailPasswordFilename() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.emailPassword() { backup.arguments.property $1 $2
+backup.arguments.emailPassword() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.backupDescriptionFilename() { backup.arguments.property $1 $2
+backup.arguments.backupDescriptionFilename() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.sendEmail() { backup.arguments.property $1 $2
+backup.arguments.sendEmail() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.emailFrom() { backup.arguments.property $1 $2
+backup.arguments.emailFrom() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.hostname() { backup.arguments.property $1 $2
+backup.arguments.hostname() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.backupMedium() { backup.arguments.property $1 $2
+backup.arguments.backupMedium() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.backupMediumLabel() { backup.arguments.property $1 $2
+backup.arguments.backupMediumLabel() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.workDir() { backup.arguments.property $1 $2
+backup.arguments.workDir() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.backupMediumDir() { backup.arguments.property $1 $2
+backup.arguments.backupMediumDir() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.stageSubDir() { backup.arguments.property $1 $2
+backup.arguments.stageSubDir() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.backupSubDir() { backup.arguments.property $1 $2
+backup.arguments.backupSubDir() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.restoreSubDir() { backup.arguments.property $1 $2
+backup.arguments.restoreSubDir() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.logSubDir() { backup.arguments.property $1 $2
+backup.arguments.logSubDir() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.backupName() { backup.arguments.property $1 $2
+backup.arguments.backupName() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.actions() { backup.arguments.property $1 $2
+backup.arguments.actions() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.backupGroups() { backup.arguments.property $1 $2
+backup.arguments.backupGroups() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.fullBackup() { backup.arguments.property $1 $2
+backup.arguments.fullBackup() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
+} 
+backup.arguments.useLog() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
-backup.arguments.useLog() { backup.arguments.property $1 $2
-}
-backup.arguments.dryRun() { backup.arguments.property $1 $2
+backup.arguments.dryRun() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
 
 backup.arguments.parse()
@@ -154,9 +146,9 @@ backup.arguments.parse()
                         OPTIND=$(( ${OPTIND} + 1 ))
                     fi
                     ;;
-                bmd|backup-medium_dir)
+                bmd|backup-medium-dir)
                     if [ ! -z "${!OPTIND:0:1}" -a ! "${!OPTIND:0:1}" = "-" ]; then
-                        backup.arguments.mediumDir = ${!OPTIND}
+                        backup.arguments.backupMediumDir = ${!OPTIND}
                         OPTIND=$(( ${OPTIND} + 1 ))
                     fi
                     ;;
@@ -192,13 +184,13 @@ backup.arguments.parse()
                     ;;
                 action)
                     if [ ! -z "${!OPTIND:0:1}" -a ! "${!OPTIND:0:1}" = "-" ]; then
-                        ACTIONS=("${ACTIONS[@]}" "${!OPTIND}") # TODO ANFO How to handle arrays???
+                        backup.arguments_actionsArray=("${backup.arguments_actionsArray[@]}" "${!OPTIND}")
                         OPTIND=$(( ${OPTIND} + 1 ))
                     fi
                     ;;
                 group)
                     if [ ! -z "${!OPTIND:0:1}" -a ! "${!OPTIND:0:1}" = "-" ]; then
-                        BACKUP_GROUPS=("${BACKUP_GROUPS[@]}" "${!OPTIND}") # TODO ANFO
+                        backup.arguments_backupGroupsArray=("${backup.arguments_backupGroupsArray[@]}" "${!OPTIND}")
                         OPTIND=$(( ${OPTIND} + 1 ))
                     fi
                     ;;
@@ -215,13 +207,13 @@ backup.arguments.parse()
             ;;
 
         c) backup.arguments.configFilename = ${OPTARG};;
-        a) ACTIONS=("${ACTIONS[@]}" "${OPTARG}");;  # TODO ANFO
-        g) BACKUP_GROUPS=("${BACKUP_GROUPS[@]}" "${OPTARG}");; # TODO ANFO
+        a) backup.arguments_actionsArray=("${backup.arguments_actionsArray[@]}" "${OPTARG}");;
+        g) backup.arguments_backupGroupsArray=("${backup.arguments_backupGroupsArray[@]}" "${OPTARG}");;
         h) backup.arguments.hostname = ${OPTARG};;
         n) backup.arguments.backupName = ${OPTARG};;
         f) backup.arguments.fullBackup = true;;
-        e) backup.arguments.sendEmail =true;;
-        l) backup.arguments.useLog =true;;
+        e) backup.arguments.sendEmail = true;;
+        l) backup.arguments.useLog = true;;
 
         :)
           ${ECHO_CMD} "Option -${OPTARG} needs an argument." >&2
@@ -236,13 +228,40 @@ backup.arguments.parse()
 
     if [ "${USAGE_ERROR}" = "true" ]
     then
-        backup.arguments.show_usage
+        backup.arguments.showUsage
         exit 1
     fi
 }
 
+backup.arguments.showArguments()
+{
+    backup.system.stdout.printMessageAndValue "Backup Name: " args.backupName
+    backup.system.stdout.printMessageAndValue "Configuration Filename: " args.configFilename
+    backup.system.stdout.printMessageAndValue "Passphrase Filename: " args.passphraseFilename
+    backup.system.stdout.printArray "Backup Groups: " args.backupGroups
+    backup.system.stdout.printArray "Backup Actions: " args.actions
 
-backup.arguments.show_usage()
+    backup.system.stdout.printValue args.passphrase
+    backup.system.stdout.printValue args.emailPasswordFilename
+    backup.system.stdout.printValue args.emailPassword
+    backup.system.stdout.printValue args.backupDescriptionFilename
+    backup.system.stdout.printValue args.sendEmail
+    backup.system.stdout.printValue args.emailFrom
+    backup.system.stdout.printValue args.hostname
+    backup.system.stdout.printValue args.backupMedium
+    backup.system.stdout.printValue args.backupMediumLabel
+    backup.system.stdout.printValue args.workDir
+    backup.system.stdout.printValue args.backupMediumDir
+    backup.system.stdout.printValue args.stageSubDir
+    backup.system.stdout.printValue args.backupSubDir
+    backup.system.stdout.printValue args.restoreSubDir
+    backup.system.stdout.printValue args.logSubDir
+    backup.system.stdout.printValue args.fullBackup
+    backup.system.stdout.printValue args.useLog
+    backup.system.stdout.printValue args.dryRun
+}
+
+backup.arguments.showUsage()
 {
     cat <<-___HERE
     Usage: $0
