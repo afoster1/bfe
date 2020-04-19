@@ -31,6 +31,16 @@ backup.system.stdout.printValue(){
     fi
 }
 
+backup.system.stdout.printValueObscured(){
+    local varName=$1
+    local varValue=$(${varName})
+
+    if [ ${#varValue} -gt 0 ]
+    then
+        echo "${varName}: ****"
+    fi
+}
+
 backup.system.stdout.printString(){
     echo $@
 }

@@ -27,6 +27,7 @@ backup.arguments_backupGroups=array19
 backup.arguments_fullBackup=20
 backup.arguments_useLog=21
 backup.arguments_dryRun=22
+backup.arguments_certificateDatabase=23
 
 backup.arguments_actionsArray=()
 backup.arguments_backupGroupsArray=()
@@ -76,6 +77,8 @@ backup.arguments.fullBackup() { backup.system.utils.propertyAccessor backup.argu
 backup.arguments.useLog() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
 backup.arguments.dryRun() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
+}
+backup.arguments.certificateDatabase() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
 
 backup.arguments.parse()
@@ -242,25 +245,23 @@ backup.arguments.setDefaults()
         backup.arguments.hostname = `${HOSTNAME_CMD}`
     fi
 
+    if [ -z "`backup.arguments.configFilename`" ]
+    then
+        if [ -z "`backup.arguments.workDir`" ]
+        then
+            backup.arguments.configFilename = "backup.cfg"
+        else
+            backup.arguments.configFilename = "`backup.arguments.workDir`/backup.cfg"
+        fi
+    fi
+
+    backup.arguments.readConfigurationFile
+
     if [ -z "`backup.arguments.workDir`" ]
     then
         backup.arguments.workDir = `backup.system.utils.getWorkingDirectory`
     fi
 
-    if [ -z "`backup.arguments.configFilename`" ]
-    then
-        backup.arguments.configFilename = "`backup.arguments.workDir`/backup.cfg"
-    fi
-
-    if [ -f "`backup.arguments.configFilename`" ];
-    then
-        eval ". `backup.arguments.configFilename`"
-        # TODO ANFO Read the configuration file properly.
-
-        # TODO ANFO This loads the contents of the config filename bash file
-        # but does not load them into the arguments object.  Need to fix this
-        # to get config file to work.
-    fi
 
     if [ -z "`backup.arguments.backupDescriptionFilename`" ]
     then
@@ -298,6 +299,54 @@ backup.arguments.setDefaults()
     fi
 }
 
+backup.arguments.readConfigurationFile()
+{
+    local filename=`backup.arguments.configFilename`
+
+    if [ -f "${filename}" ];
+    then
+        # Read the configuration file
+        while IFS= read line
+        do
+            name=${line%=*}
+            value=${line#*=}
+
+            if [ ${#name} -gt 0 ]
+            then
+                if [ "${name}" = "WORK_DIR" ]
+                then
+                    backup.arguments.workDir = ${value}
+                fi
+
+                if [ "${name}" = "EMAIL_PASSWORD" ]
+                then
+                    backup.arguments.emailPassword = ${value}
+                fi
+
+                if [ "${name}" = "PASSPHRASE" ]
+                then
+                    backup.arguments.passphrase = ${value}
+                fi
+
+                if [ "${name}" = "EMAIL_FROM" ]
+                then
+                    backup.arguments.emailFrom = ${value}
+                fi
+
+                if [ "${name}" = "BACKUP_DESCRIPTION_FILENAME" ]
+                then
+                    backup.arguments.backupDescriptionFilename = ${value}
+                fi
+
+                if [ "${name}" = "CERTIFICATE_DATABASE" ]
+                then
+                    backup.arguments.certificateDatabase = ${value}
+                fi
+            fi
+        done < ${filename}
+    fi
+}
+
 backup.arguments.showArguments()
 {
     backup.system.stdout.printMessageAndValue "Backup Name: " backup.arguments.backupName
@@ -309,9 +358,9 @@ backup.arguments.showArguments()
     echo
     echo "Arguments:"
 
-    backup.system.stdout.printValue backup.arguments.passphrase
+    backup.system.stdout.printValueObscured backup.arguments.passphrase
     backup.system.stdout.printValue backup.arguments.emailPasswordFilename
-    backup.system.stdout.printValue backup.arguments.emailPassword
+    backup.system.stdout.printValueObscured backup.arguments.emailPassword
     backup.system.stdout.printValue backup.arguments.backupDescriptionFilename
     backup.system.stdout.printValue backup.arguments.sendEmail
     backup.system.stdout.printValue backup.arguments.emailFrom
@@ -327,6 +376,7 @@ backup.arguments.showArguments()
     backup.system.stdout.printValue backup.arguments.fullBackup
     backup.system.stdout.printValue backup.arguments.useLog
     backup.system.stdout.printValue backup.arguments.dryRun
+    backup.system.stdout.printValue backup.arguments.certificateDatabase
 }
 
 backup.arguments.showUsage()
