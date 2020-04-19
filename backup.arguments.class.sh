@@ -300,34 +300,33 @@ backup.arguments.setDefaults()
 
 backup.arguments.showArguments()
 {
-    # TODO ANFO Below should not use "args."
-    backup.system.stdout.printMessageAndValue "Backup Name: " args.backupName
-    backup.system.stdout.printMessageAndValue "Configuration Filename: " args.configFilename
-    backup.system.stdout.printMessageAndValue "Passphrase Filename: " args.passphraseFilename
-    backup.system.stdout.printArray "Backup Groups: " args.backupGroups
-    backup.system.stdout.printArray "Backup Actions: " args.actions
+    backup.system.stdout.printMessageAndValue "Backup Name: " backup.arguments.backupName
+    backup.system.stdout.printMessageAndValue "Configuration Filename: " backup.arguments.configFilename
+    backup.system.stdout.printMessageAndValue "Passphrase Filename: " backup.arguments.passphraseFilename
+    backup.system.stdout.printArray "Backup Groups: " backup.arguments.backupGroups
+    backup.system.stdout.printArray "Backup Actions: " backup.arguments.actions
 
     echo
     echo "Arguments:"
 
-    backup.system.stdout.printValue args.passphrase
-    backup.system.stdout.printValue args.emailPasswordFilename
-    backup.system.stdout.printValue args.emailPassword
-    backup.system.stdout.printValue args.backupDescriptionFilename
-    backup.system.stdout.printValue args.sendEmail
-    backup.system.stdout.printValue args.emailFrom
-    backup.system.stdout.printValue args.hostname
-    backup.system.stdout.printValue args.backupMedium
-    backup.system.stdout.printValue args.backupMediumLabel
-    backup.system.stdout.printValue args.workDir
-    backup.system.stdout.printValue args.backupMediumDir
-    backup.system.stdout.printValue args.stageSubDir
-    backup.system.stdout.printValue args.backupSubDir
-    backup.system.stdout.printValue args.restoreSubDir
-    backup.system.stdout.printValue args.logSubDir
-    backup.system.stdout.printValue args.fullBackup
-    backup.system.stdout.printValue args.useLog
-    backup.system.stdout.printValue args.dryRun
+    backup.system.stdout.printValue backup.arguments.passphrase
+    backup.system.stdout.printValue backup.arguments.emailPasswordFilename
+    backup.system.stdout.printValue backup.arguments.emailPassword
+    backup.system.stdout.printValue backup.arguments.backupDescriptionFilename
+    backup.system.stdout.printValue backup.arguments.sendEmail
+    backup.system.stdout.printValue backup.arguments.emailFrom
+    backup.system.stdout.printValue backup.arguments.hostname
+    backup.system.stdout.printValue backup.arguments.backupMedium
+    backup.system.stdout.printValue backup.arguments.backupMediumLabel
+    backup.system.stdout.printValue backup.arguments.workDir
+    backup.system.stdout.printValue backup.arguments.backupMediumDir
+    backup.system.stdout.printValue backup.arguments.stageSubDir
+    backup.system.stdout.printValue backup.arguments.backupSubDir
+    backup.system.stdout.printValue backup.arguments.restoreSubDir
+    backup.system.stdout.printValue backup.arguments.logSubDir
+    backup.system.stdout.printValue backup.arguments.fullBackup
+    backup.system.stdout.printValue backup.arguments.useLog
+    backup.system.stdout.printValue backup.arguments.dryRun
 }
 
 backup.arguments.showUsage()
