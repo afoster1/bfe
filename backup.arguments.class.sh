@@ -231,15 +231,84 @@ backup.arguments.parse()
         backup.arguments.showUsage
         exit 1
     fi
+
+    backup.arguments.setDefaults
+}
+
+backup.arguments.setDefaults()
+{
+    if [ -z "`backup.arguments.hostname`" ]
+    then
+        backup.arguments.hostname = `${HOSTNAME_CMD}`
+    fi
+
+    if [ -z "`backup.arguments.workDir`" ]
+    then
+        backup.arguments.workDir = `backup.system.utils.getWorkingDirectory`
+    fi
+
+    if [ -z "`backup.arguments.configFilename`" ]
+    then
+        backup.arguments.configFilename = "`backup.arguments.workDir`/backup.cfg"
+    fi
+
+    if [ -f "`backup.arguments.configFilename`" ];
+    then
+        eval ". `backup.arguments.configFilename`"
+        # TODO ANFO Read the configuration file properly.
+
+        # TODO ANFO This loads the contents of the config filename bash file
+        # but does not load them into the arguments object.  Need to fix this
+        # to get config file to work.
+    fi
+
+    if [ -z "`backup.arguments.backupDescriptionFilename`" ]
+    then
+        backup.arguments.backupDescriptionFilename = "`backup.arguments.workDir`/backup-descriptions.txt"
+    fi
+
+    if [ -z "`backup.arguments.stageSubDir`" ]
+    then
+        backup.arguments.stageSubDir = stage
+    fi
+
+    if [ -z "`backup.arguments.backupSubDir`" ]
+    then
+        backup.arguments.backupSubDir = backup
+    fi
+
+    if [ -z "`backup.arguments.restoreSubDir`" ]
+    then
+        backup.arguments.restoreSubDir = restore
+    fi
+
+    if [ -z "`backup.arguments.logSubDir`" ]
+    then
+        backup.arguments.logSubDir = log
+    fi
+
+    if [ -z "`backup.arguments.backupMediumDir`" ]
+    then
+        backup.arguments.backupMediumDir = /media
+    fi
+
+    if [ ${#backup.arguments_actionsArray[@]} -eq 0 ]
+    then
+        backup.arguments.actions = default
+    fi
 }
 
 backup.arguments.showArguments()
 {
+    # TODO ANFO Below should not use "args."
     backup.system.stdout.printMessageAndValue "Backup Name: " args.backupName
     backup.system.stdout.printMessageAndValue "Configuration Filename: " args.configFilename
     backup.system.stdout.printMessageAndValue "Passphrase Filename: " args.passphraseFilename
     backup.system.stdout.printArray "Backup Groups: " args.backupGroups
     backup.system.stdout.printArray "Backup Actions: " args.actions
+
+    echo
+    echo "Arguments:"
 
     backup.system.stdout.printValue args.passphrase
     backup.system.stdout.printValue args.emailPasswordFilename

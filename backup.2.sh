@@ -8,6 +8,8 @@ backup.arguments args
 args.parse "$@"
 args.showArguments
 
+backup.system.init args
+
 # Example of setting an array from the script
 # a=("sdf" "jkl")
 # array="$(declare -p a)"

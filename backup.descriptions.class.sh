@@ -67,8 +67,7 @@ backup.descriptions.load()
                                 name=${property_value}
                             else
                                 name=
-                                ${ECHO_CMD} "TODO ANFO"
-                                #TODO ANFO error "Backup description does not start with NAME property."
+                                backup.system.log.error "Backup description does not start with NAME property."
                             fi
                         else
                             eval "backup.descriptions_backupDescriptionProperties${name}_+=([${property_name}]=${property_value})"
@@ -84,8 +83,7 @@ backup.descriptions.load()
                                 unset backup.descriptions_backupDescriptionData${name}_
                                 declare -g -a backup.descriptions_backupDescriptionData${name} # Indexed array
                             else
-                                ${ECHO_CMD} "TODO ANFO"
-                                #TODO ANFO error "Backup description does not start with NAME property."
+                                backup.system.log.error "Backup description does not start with NAME property."
                             fi
                         fi
                         eval "backup.descriptions_backupDescriptionData${name}+=('${line}')"

@@ -1,3 +1,13 @@
+# Fields
+backup_system_log_args_= # Command line arguments
+backup_system_log_filename_= # The filename to be used for the log
+
+backup.system.init() {
+    backup_system_log_args_=$1
+
+    backup.system.log.init
+}
+
 backup.system.stdout.printMessageAndValue(){
     local msg=$1
     local varName=$2
@@ -41,6 +51,56 @@ backup.system.stdout.printArray(){
         list="$list$i"
     done
     echo "${msg}${list}"
+}
+
+backup.system.log.init() {
+    local backupName=`${backup_system_log_args_}.backupName`
+    local workDir=`${backup_system_log_args_}.workDir`
+    local logSubDir=`${backup_system_log_args_}.logSubDir`
+    local hostname=`${backup_system_log_args_}.hostname`
+
+    if [ "`${backup_system_log_args_}.useLog`" = true ]
+    then
+        if [ -n "${backupName}" ]
+        then
+            backup_system_log_filename_=${workDir}/${logSubDir}/`date +%y%m%d_%H%M%S`_${hostname}_${backupName}
+        else
+            backup_system_log_filename_=${workDir}/${logSubDir}/`date +%y%m%d_%H%M%S`_${hostname}
+        fi
+    else
+        unset backup_system_log_filename_
+    fi
+
+    ${ECHO_CMD} "Log filename: ${backup_system_log_filename_}"
+}
+
+backup.system.log.info() {
+    if [ "`${backup_system_log_args_}.useLog`" = true ]
+    then
+        ${ECHO_CMD} "INFO:$@" >> ${backup_system_log_filename_}.log
+    else
+        ${ECHO_CMD} "INFO:$@"
+    fi
+}
+
+backup.system.log.error() {
+    ${ECHO_CMD} "ERROR:$@"
+    if [ "`${backup_system_log_args_}.useLog`" = true ]
+    then
+        ${ECHO_CMD} "ERROR:$@" >> ${backup_system_log_filename_}.log
+        ${ECHO_CMD} "ERROR:$@" 1>&2 >> ${backup_system_log_filename_}.err
+    fi
+
+    # TODO ANFO Enable email notifications
+    #     if [ "${OK_TO_SEND_EMAIL}" = true ]
+    #     then
+    #         OK_TO_SEND_EMAIL=false
+    #         EMAIL_MSG="${EMAIL_MSG}
+    # ERROR: $@"
+    #         send_email ${EMAIL_FROM} "Re: ${HOSTNAME} :(" "${EMAIL_MSG}" true
+    #         OK_TO_SEND_EMAIL=true
+    #     fi
+    exit 1
 }
 
 backup.system.utils.starts_with_any_of(){
@@ -89,4 +149,21 @@ backup.system.utils.propertyAccessor()
             eval "printf '%s\n' \"\${${properties}[${name}]}\""
         fi
     fi
+}
+
+backup.system.utils.getWorkingDirectory()
+{
+    src="${BASH_SOURCE[0]}"
+
+    # resolve $src until the file is no longer a symlink
+    while [ -h "${src}" ]
+    do
+        dir="$( cd -P "$( ${DIRNAME_CMD} "${src}" )" && pwd )"
+        src="$(readlink "${src}")"
+        # if $src was a relative symlink, we need to resolve it relative to
+        # the path where the symlink file was located
+        [[ ${src} != /* ]] && src="${dir}/${src}"
+    done
+
+    echo "$( cd -P "$( ${DIRNAME_CMD} "${src}" )" && pwd )"
 }
