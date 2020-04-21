@@ -295,7 +295,7 @@ backup.arguments.setDefaults()
 
     if [ ${#backup.arguments_actionsArray[@]} -eq 0 ]
     then
-        backup.arguments.actions = default
+        backup.arguments.actions += default
     fi
 }
 
@@ -347,7 +347,7 @@ backup.arguments.readConfigurationFile()
     fi
 }
 
-backup.arguments.showArguments()
+backup.arguments.print()
 {
     backup.system.stdout.printMessageAndValue "Backup Name: " backup.arguments.backupName
     backup.system.stdout.printMessageAndValue "Configuration Filename: " backup.arguments.configFilename

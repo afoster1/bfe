@@ -18,6 +18,13 @@ backup.descriptions(){
     ${objName}.init ${args}
 }
 
+backup.description(){
+    local objName=$1
+    local args=$2
+    . <(sed "s/backup.description/${objName}/g" backup.description.class.sh)
+    ${objName}.init ${args}
+}
+
 backup.arguments()
 {
     . <(sed "s/backup.arguments/$1/g" backup.arguments.class.sh)

@@ -81,17 +81,96 @@ backup.descriptions.load()
                             then
                                 new_data_block=false
                                 unset backup.descriptions_backupDescriptionData${name}_
-                                declare -g -a backup.descriptions_backupDescriptionData${name} # Indexed array
+                                declare -g -a backup.descriptions_backupDescriptionData${name}_ # Indexed array
                             else
                                 backup.system.log.error "Backup description does not start with NAME property."
                             fi
                         fi
-                        eval "backup.descriptions_backupDescriptionData${name}+=('${line}')"
+                        eval "backup.descriptions_backupDescriptionData${name}_+=('${line}')"
                     fi
                 else
                     new_property_block=true
                 fi
             done < ${filename}
         fi
+    fi
+}
+
+backup.descriptions.getBackupDescription()
+{
+    object_name=$1
+    name=$2
+
+    if [ $(backup.system.utils.contains "${backup.descriptions_backupDescriptionNames_[@]}" "${name}") == "n" ]
+    then
+        backup.system.log.error "Backup description [${name}] does not exist."
+    else
+        . <(sed "s/backup.description/${object_name}/g" backup.description.class.sh)
+        ${object_name}.init ${backup.descriptions_args_} ${name}
+
+        # TODO ANFO Load all the data for the description from the arrays...
+
+        # Read the details
+        array_name=backup.descriptions_backupDescriptionProperties`${object_name}.name`_
+        eval "array_keys=\${!${array_name}[@]}"
+        for i in ${array_keys}
+        do
+            if [ "${i}" = "TYPE" ]
+            then
+                eval "value=\${${array_name}[${i}]}"
+                ${object_name}.type = "${value}"
+            fi
+
+            if [ "${i}" = "MEDIUM" ]
+            then
+                eval "value=\${${array_name}[${i}]}"
+                ${object_name}.medium = "${value}"
+            fi
+
+            if [ "${i}" = "MEDIUM_LABEL" ]
+            then
+                eval "value=\${${array_name}[${i}]}"
+                ${object_name}.mediumLabel = "${value}"
+            fi
+
+            if [ "${i}" = "KEEP_FULL" ]
+            then
+                eval "value=\${${array_name}[${i}]}"
+                ${object_name}.keepFull = "${value}"
+            fi
+
+            if [ "${i}" = "SSH_SERVER" ]
+            then
+                eval "value=\${${array_name}[${i}]}"
+                ${object_name}.sshServer = "${value}"
+            fi
+
+            if [ "${i}" = "SSH_PORT" ]
+            then
+                eval "value=\${${array_name}[${i}]}"
+                ${object_name}.sshPort = "${value}"
+            fi
+
+            if [ "${i}" = "SSH_USER_ID" ]
+            then
+                eval "value=\${${array_name}[${i}]}"
+                ${object_name}.sshUserId = "${value}"
+            fi
+        done
+
+        # Read the data
+        data_name=backup.descriptions_backupDescriptionData`${object_name}.name`_
+        eval "data_indexes=\${!${data_name}[@]}"
+        local a=()
+        for index in ${data_indexes}
+        do
+            eval "data_value=\${${data_name}[${index}]}"
+            if [ ${#data_value} -gt 0 ]
+            then
+                ${object_name}.data += "${data_value}"
+            fi
+        done
+
+        # TODO ANFO Maybe it would be simpler to create object instances for all backup descriptions loaded... instead of using the arrays??
     fi
 }
