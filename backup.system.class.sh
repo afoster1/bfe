@@ -128,11 +128,27 @@ backup.system.utils.starts_with_any_of(){
     return 1
 }
 
+backup.system.utils.contains()
+{
+    local n=$#
+    local value=${!n}
+    for ((i=1;i < $#;i++))
+    {
+        if [[ "${value}" == "${!i}" ]]
+        then
+            ${ECHO_CMD} "y"
+            return 0
+        fi
+    }
+    ${ECHO_CMD} "n"
+    return 1
+}
+
 backup.system.utils.propertyAccessor()
 {
     properties="$1"
     operation="$2"
-    value="$3"
+    value="$3" # TODO ANFO Rename this as parameter1
 
     # Find the array id that matches the property being set, using the name of the property function being used.
     object_name=${properties%_*}
@@ -145,17 +161,36 @@ backup.system.utils.propertyAccessor()
         # This is an array.
         if [ "${operation}" == "=" ]
         then
+            # Set the property with the named array provided
+            value=$(eval "printf '%s\n' \"\$${value}\"")
             local a="declare -ga ${name}Array=${value#*=}"
             eval "${a}"
+        elif [ "${operation}" == "+=" ]
+        then
+            # Add the single value provided
+            eval "${name}Array+=('${value}')"
+        elif [ "${operation}" == "count" ]
+        then
+            # Get the number of elements in the array
+            local a="\${#${name}Array[@]}"
+            eval "printf '%s\n' \"${a}\""
+        elif [[ "${operation}" =~ ^\[[0-9]+\] ]]
+        then
+            # Get the array value at the index n. ie. "[n]"
+            local a="\${${name}Array${BASH_REMATCH[0]}}"
+            eval "printf '%s\n' \"${a}\""
         else
+            # Get the array values
             declare -p ${name}Array
         fi
     else
         if [ "${operation}" == "=" ]
         then
+            # Set the poroperty value
             local a="declare -g ${properties}[${name}]=${value}"
             eval "${a}"
         else
+            # Get the property value
             eval "printf '%s\n' \"\${${properties}[${name}]}\""
         fi
     fi
