@@ -28,6 +28,7 @@ backup.arguments_fullBackup=20
 backup.arguments_useLog=21
 backup.arguments_dryRun=22
 backup.arguments_certificateDatabase=23
+backup.arguments_verbose=24
 
 backup.arguments_actionsArray=()
 backup.arguments_backupGroupsArray=()
@@ -80,12 +81,14 @@ backup.arguments.dryRun() { backup.system.utils.propertyAccessor backup.argument
 }
 backup.arguments.certificateDatabase() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
 }
+backup.arguments.verbose() { backup.system.utils.propertyAccessor backup.arguments_properties $1 $2
+}
 
 backup.arguments.parse()
 {
     ARGS="$@"
 
-    while getopts ":a:g:h:c:efln:-:" option ${ARGS}
+    while getopts ":a:g:h:c:efvln:-:" option ${ARGS}
     do
       case $option in
         -)
@@ -206,6 +209,9 @@ backup.arguments.parse()
                 dry-run)
                     backup.arguments.dryRun = true
                     ;;
+                verbose)
+                    backup.arguments.verbose = true
+                    ;;
             esac
             ;;
 
@@ -217,6 +223,7 @@ backup.arguments.parse()
         f) backup.arguments.fullBackup = true;;
         e) backup.arguments.sendEmail = true;;
         l) backup.arguments.useLog = true;;
+        v) backup.arguments.verbose = true;;
 
         :)
           ${ECHO_CMD} "Option -${OPTARG} needs an argument." >&2
@@ -355,28 +362,29 @@ backup.arguments.print()
     backup.system.stdout.printArray "Backup Groups: " backup.arguments.backupGroups
     backup.system.stdout.printArray "Backup Actions: " backup.arguments.actions
 
-    echo
-    echo "Arguments:"
-
-    backup.system.stdout.printValueObscured backup.arguments.passphrase
-    backup.system.stdout.printValue backup.arguments.emailPasswordFilename
-    backup.system.stdout.printValueObscured backup.arguments.emailPassword
-    backup.system.stdout.printValue backup.arguments.backupDescriptionFilename
-    backup.system.stdout.printValue backup.arguments.sendEmail
-    backup.system.stdout.printValue backup.arguments.emailFrom
-    backup.system.stdout.printValue backup.arguments.hostname
-    backup.system.stdout.printValue backup.arguments.backupMedium
-    backup.system.stdout.printValue backup.arguments.backupMediumLabel
-    backup.system.stdout.printValue backup.arguments.workDir
-    backup.system.stdout.printValue backup.arguments.backupMediumDir
-    backup.system.stdout.printValue backup.arguments.stageSubDir
-    backup.system.stdout.printValue backup.arguments.backupSubDir
-    backup.system.stdout.printValue backup.arguments.restoreSubDir
-    backup.system.stdout.printValue backup.arguments.logSubDir
-    backup.system.stdout.printValue backup.arguments.fullBackup
-    backup.system.stdout.printValue backup.arguments.useLog
-    backup.system.stdout.printValue backup.arguments.dryRun
-    backup.system.stdout.printValue backup.arguments.certificateDatabase
+    v=`backup.arguments.verbose`
+    if [ "${v}" = true ]
+    then
+        backup.system.stdout.printValueObscured backup.arguments.passphrase
+        backup.system.stdout.printValue backup.arguments.emailPasswordFilename
+        backup.system.stdout.printValueObscured backup.arguments.emailPassword
+        backup.system.stdout.printValue backup.arguments.backupDescriptionFilename
+        backup.system.stdout.printValue backup.arguments.sendEmail
+        backup.system.stdout.printValue backup.arguments.emailFrom
+        backup.system.stdout.printValue backup.arguments.hostname
+        backup.system.stdout.printValue backup.arguments.backupMedium
+        backup.system.stdout.printValue backup.arguments.backupMediumLabel
+        backup.system.stdout.printValue backup.arguments.workDir
+        backup.system.stdout.printValue backup.arguments.backupMediumDir
+        backup.system.stdout.printValue backup.arguments.stageSubDir
+        backup.system.stdout.printValue backup.arguments.backupSubDir
+        backup.system.stdout.printValue backup.arguments.restoreSubDir
+        backup.system.stdout.printValue backup.arguments.logSubDir
+        backup.system.stdout.printValue backup.arguments.fullBackup
+        backup.system.stdout.printValue backup.arguments.useLog
+        backup.system.stdout.printValue backup.arguments.dryRun
+        backup.system.stdout.printValue backup.arguments.certificateDatabase
+    fi
 }
 
 backup.arguments.showUsage()
@@ -403,6 +411,7 @@ backup.arguments.showUsage()
                -n|--name [name]
                -f|--full-backup
                -l|--log
+               -v|--verbose
                --drop-caches
                --dry-run
 

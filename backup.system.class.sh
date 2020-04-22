@@ -81,7 +81,10 @@ backup.system.log.init() {
         unset backup_system_log_filename_
     fi
 
-    ${ECHO_CMD} "Log filename: ${backup_system_log_filename_}"
+    if [ ${#backup_system_log_filename_} -gt 0 ]
+    then
+        ${ECHO_CMD} "Log filename: ${backup_system_log_filename_}"
+    fi
 }
 
 backup.system.log.info() {
@@ -148,7 +151,7 @@ backup.system.utils.propertyAccessor()
 {
     properties="$1"
     operation="$2"
-    value="$3" # TODO ANFO Rename this as parameter1
+    parameter1="$3"
 
     # Find the array id that matches the property being set, using the name of the property function being used.
     object_name=${properties%_*}
@@ -162,13 +165,13 @@ backup.system.utils.propertyAccessor()
         if [ "${operation}" == "=" ]
         then
             # Set the property with the named array provided
-            value=$(eval "printf '%s\n' \"\$${value}\"")
-            local a="declare -ga ${name}Array=${value#*=}"
+            parameter1=$(eval "printf '%s\n' \"\$${parameter1}\"")
+            local a="declare -ga ${name}Array=${parameter1#*=}"
             eval "${a}"
         elif [ "${operation}" == "+=" ]
         then
             # Add the single value provided
-            eval "${name}Array+=('${value}')"
+            eval "${name}Array+=('${parameter1}')"
         elif [ "${operation}" == "count" ]
         then
             # Get the number of elements in the array
@@ -187,7 +190,7 @@ backup.system.utils.propertyAccessor()
         if [ "${operation}" == "=" ]
         then
             # Set the poroperty value
-            local a="declare -g ${properties}[${name}]=${value}"
+            local a="declare -g ${properties}[${name}]=${parameter1}"
             eval "${a}"
         else
             # Get the property value
