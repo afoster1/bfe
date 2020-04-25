@@ -22,6 +22,23 @@ backup.descriptions(){
 backup.description(){
     local objName=$1
     local args=$2
+    local descriptionName=$3
     . <(sed "s/backup.description/${objName}/g" backup.description.class.sh)
-    ${objName}.init ${args}
+    ${objName}.init ${args} ${descriptionName}
+}
+
+backup.handler(){
+    local objName=$1
+    local args=$2
+    local descriptionName=$3
+    . <(sed "s/backup.handler/${objName}/g" backup.handler.class.sh)
+    ${objName}.init ${args} ${descriptionName}
+}
+
+backup.restic_agent(){
+    local objName=$1
+    local args=$2
+    local descriptionName=$3
+    . <(sed "s/backup.restic_agent/${objName}/g" backup.restic_agent.class.sh)
+    ${objName}.init ${args} ${descriptionName}
 }

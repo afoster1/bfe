@@ -29,8 +29,10 @@ then
     # ...then process them separately
     for n in ${a[@]}
     do
+        # Construct the backup description and give it to the handler for
+        # processing.
         descriptions.getBackupDescription description ${n}
-        description.print
-        ${ECHO_CMD}
+        backup.handler bh args description
+        bh.process
     done
 fi

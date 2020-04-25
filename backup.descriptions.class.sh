@@ -105,8 +105,7 @@ backup.descriptions.getBackupDescription()
     then
         backup.system.log.error "Backup description [${name}] does not exist."
     else
-        . <(sed "s/backup.description/${object_name}/g" backup.description.class.sh)
-        ${object_name}.init ${backup.descriptions_args_} ${name}
+        backup.description ${object_name} ${backup.descriptions_args_} ${name}
 
         # TODO ANFO Load all the data for the description from the arrays...
 
