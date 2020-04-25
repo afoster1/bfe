@@ -1,19 +1,20 @@
 #!/bin/bash
+# Backup Front-End
 
 # Define all the types
-. backup.types.sh
+. bfe.types.sh
 
 # Read backup arguments
-backup.arguments args
+bfe.arguments args
 args.parse "$@"
 args.print
 
 # Initialise system
-backup.system.init args
+bfe.system.init args
 echo
 
 # Create a backup descriptions object
-backup.descriptions descriptions args
+bfe.descriptions descriptions args
 descriptions.load
 
 # Print each backup description (aka. group)
@@ -32,7 +33,7 @@ then
         # Construct the backup description and give it to the handler for
         # processing.
         descriptions.getBackupDescription description ${n}
-        backup.handler bh args description
-        bh.process
+        bfe.handler handler args description
+        handler.process
     done
 fi

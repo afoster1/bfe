@@ -1,14 +1,14 @@
 # Fields
-backup_system_log_args_= # Command line arguments
-backup_system_log_filename_= # The filename to be used for the log
+bfe_system_log_args_= # Command line arguments
+bfe_system_log_filename_= # The filename to be used for the log
 
-backup.system.init() {
-    backup_system_log_args_=$1
+bfe.system.init() {
+    bfe_system_log_args_=$1
 
-    backup.system.log.init
+    bfe.system.log.init
 }
 
-backup.system.stdout.printMessageAndValue(){
+bfe.system.stdout.printMessageAndValue(){
     local msg=$1
     local varName=$2
     local varValue=$(${varName})
@@ -21,7 +21,7 @@ backup.system.stdout.printMessageAndValue(){
     fi
 }
 
-backup.system.stdout.printValue(){
+bfe.system.stdout.printValue(){
     local varName=$1
     local varValue=$(${varName})
 
@@ -31,7 +31,7 @@ backup.system.stdout.printValue(){
     fi
 }
 
-backup.system.stdout.printValueObscured(){
+bfe.system.stdout.printValueObscured(){
     local varName=$1
     local varValue=$(${varName})
 
@@ -41,11 +41,11 @@ backup.system.stdout.printValueObscured(){
     fi
 }
 
-backup.system.stdout.printString(){
+bfe.system.stdout.printString(){
     echo $@
 }
 
-backup.system.stdout.printArray(){
+bfe.system.stdout.printArray(){
     local msg=$1
     shift 1
     local a b
@@ -62,45 +62,45 @@ backup.system.stdout.printArray(){
     echo "${msg}${list}"
 }
 
-backup.system.log.init() {
-    local backupName=`${backup_system_log_args_}.backupName`
-    local workDir=`${backup_system_log_args_}.workDir`
-    local logSubDir=`${backup_system_log_args_}.logSubDir`
-    local hostname=`${backup_system_log_args_}.hostname`
+bfe.system.log.init() {
+    local backupName=`${bfe_system_log_args_}.backupName`
+    local workDir=`${bfe_system_log_args_}.workDir`
+    local logSubDir=`${bfe_system_log_args_}.logSubDir`
+    local hostname=`${bfe_system_log_args_}.hostname`
 
-    if [ "`${backup_system_log_args_}.useLog`" = true ]
+    if [ "`${bfe_system_log_args_}.useLog`" = true ]
     then
         if [ -n "${backupName}" ]
         then
-            backup_system_log_filename_=${workDir}/${logSubDir}/`date +%y%m%d_%H%M%S`_${hostname}_${backupName}
+            bfe_system_log_filename_=${workDir}/${logSubDir}/`date +%y%m%d_%H%M%S`_${hostname}_${backupName}
         else
-            backup_system_log_filename_=${workDir}/${logSubDir}/`date +%y%m%d_%H%M%S`_${hostname}
+            bfe_system_log_filename_=${workDir}/${logSubDir}/`date +%y%m%d_%H%M%S`_${hostname}
         fi
     else
-        unset backup_system_log_filename_
+        unset bfe_system_log_filename_
     fi
 
-    if [ ${#backup_system_log_filename_} -gt 0 ]
+    if [ ${#bfe_system_log_filename_} -gt 0 ]
     then
-        ${ECHO_CMD} "Log filename: ${backup_system_log_filename_}"
+        ${ECHO_CMD} "Log filename: ${bfe_system_log_filename_}"
     fi
 }
 
-backup.system.log.info() {
-    if [ "`${backup_system_log_args_}.useLog`" = true ]
+bfe.system.log.info() {
+    if [ "`${bfe_system_log_args_}.useLog`" = true ]
     then
-        ${ECHO_CMD} "INFO:$@" >> ${backup_system_log_filename_}.log
+        ${ECHO_CMD} "INFO:$@" >> ${bfe_system_log_filename_}.log
     else
         ${ECHO_CMD} "INFO:$@"
     fi
 }
 
-backup.system.log.error() {
+bfe.system.log.error() {
     ${ECHO_CMD} "ERROR:$@"
-    if [ "`${backup_system_log_args_}.useLog`" = true ]
+    if [ "`${bfe_system_log_args_}.useLog`" = true ]
     then
-        ${ECHO_CMD} "ERROR:$@" >> ${backup_system_log_filename_}.log
-        ${ECHO_CMD} "ERROR:$@" 1>&2 >> ${backup_system_log_filename_}.err
+        ${ECHO_CMD} "ERROR:$@" >> ${bfe_system_log_filename_}.log
+        ${ECHO_CMD} "ERROR:$@" 1>&2 >> ${bfe_system_log_filename_}.err
     fi
 
     # TODO ANFO Enable email notifications
@@ -115,7 +115,7 @@ backup.system.log.error() {
     exit 1
 }
 
-backup.system.utils.starts_with_any_of(){
+bfe.system.utils.starts_with_any_of(){
     local n=$#
     local value=${!n}
     for ((i=1;i < $#;i++))
@@ -130,7 +130,7 @@ backup.system.utils.starts_with_any_of(){
     return 1
 }
 
-backup.system.utils.contains()
+bfe.system.utils.contains()
 {
     local n=$#
     local value=${!n}
@@ -146,7 +146,7 @@ backup.system.utils.contains()
     return 1
 }
 
-backup.system.utils.propertyAccessor()
+bfe.system.utils.propertyAccessor()
 {
     properties="$1"
     operation="$2"
@@ -158,7 +158,7 @@ backup.system.utils.propertyAccessor()
     eval "id=\${${name}}"
 
     local arrayPrefixes=( "array" )
-    if [ $(backup.system.utils.starts_with_any_of "${arrayPrefixes[@]}" "${id}") == "y" ]
+    if [ $(bfe.system.utils.starts_with_any_of "${arrayPrefixes[@]}" "${id}") == "y" ]
     then
         # This is an array.
         if [ "${operation}" == "=" ]
@@ -201,7 +201,7 @@ backup.system.utils.propertyAccessor()
     fi
 }
 
-backup.system.utils.getWorkingDirectory()
+bfe.system.utils.getWorkingDirectory()
 {
     src="${BASH_SOURCE[0]}"
 

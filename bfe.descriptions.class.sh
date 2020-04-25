@@ -1,30 +1,30 @@
-# Class named "backup.descriptions" for bash Object
+# Class named "bfe.descriptions" for bash Object
 
 # collection of property values
-backup.descriptions_properties=()
+bfe.descriptions_properties=()
 
 # properties IDs
-backup.descriptions_filename=0
+bfe.descriptions_filename=0
 
 # fields
-backup.descriptions_args_= # Command line arguments
-backup.descriptions_backupDescriptionNames_=  # Names of backups contained in the description file
+bfe.descriptions_args_= # Command line arguments
+bfe.descriptions_backupDescriptionNames_=  # Names of backups contained in the description file
 
-backup.descriptions.init(){
-    backup.descriptions_args_=$1
+bfe.descriptions.init(){
+    bfe.descriptions_args_=$1
 
-    backup.descriptions.filename = `${backup.descriptions_args_}.backupDescriptionFilename`
+    bfe.descriptions.filename = `${bfe.descriptions_args_}.backupDescriptionFilename`
 }
 
-backup.descriptions.filename() { backup.system.utils.propertyAccessor backup.descriptions_properties $1 $2
+bfe.descriptions.filename() { bfe.system.utils.propertyAccessor bfe.descriptions_properties $1 $2
 }
 
-backup.descriptions.load()
+bfe.descriptions.load()
 {
-    local filename=`backup.descriptions.filename`
+    local filename=`bfe.descriptions.filename`
 
-    unset backup.descriptions_backupDescriptionNames_
-    declare -g -a backup.descriptions_backupDescriptionNames_
+    unset bfe.descriptions_backupDescriptionNames_
+    declare -g -a bfe.descriptions_backupDescriptionNames_
 
     if [ -z "${filename}" ]
     then
@@ -61,16 +61,16 @@ backup.descriptions.load()
                             if [ "${property_name}" = "NAME" ]
                             then
                                 new_property_block=false
-                                unset backup.descriptions_backupDescriptionProperties${property_value}_
-                                declare -g -A backup.descriptions_backupDescriptionProperties${property_value}_ # Associative array
-                                backup.descriptions_backupDescriptionNames_=("${backup.descriptions_backupDescriptionNames_[@]}" "${property_value}")
+                                unset bfe.descriptions_backupDescriptionProperties${property_value}_
+                                declare -g -A bfe.descriptions_backupDescriptionProperties${property_value}_ # Associative array
+                                bfe.descriptions_backupDescriptionNames_=("${bfe.descriptions_backupDescriptionNames_[@]}" "${property_value}")
                                 name=${property_value}
                             else
                                 name=
-                                backup.system.log.error "Backup description does not start with NAME property."
+                                bfe.system.log.error "Backup description does not start with NAME property."
                             fi
                         else
-                            eval "backup.descriptions_backupDescriptionProperties${name}_+=([${property_name}]=${property_value})"
+                            eval "bfe.descriptions_backupDescriptionProperties${name}_+=([${property_name}]=${property_value})"
                         fi
                     else
                         new_property_block=true
@@ -80,13 +80,13 @@ backup.descriptions.load()
                             if [ -n "${name}" ]
                             then
                                 new_data_block=false
-                                unset backup.descriptions_backupDescriptionData${name}_
-                                declare -g -a backup.descriptions_backupDescriptionData${name}_ # Indexed array
+                                unset bfe.descriptions_backupDescriptionData${name}_
+                                declare -g -a bfe.descriptions_backupDescriptionData${name}_ # Indexed array
                             else
-                                backup.system.log.error "Backup description does not start with NAME property."
+                                bfe.system.log.error "Backup description does not start with NAME property."
                             fi
                         fi
-                        eval "backup.descriptions_backupDescriptionData${name}_+=('${line}')"
+                        eval "bfe.descriptions_backupDescriptionData${name}_+=('${line}')"
                     fi
                 else
                     new_property_block=true
@@ -96,21 +96,21 @@ backup.descriptions.load()
     fi
 }
 
-backup.descriptions.getBackupDescription()
+bfe.descriptions.getBackupDescription()
 {
     object_name=$1
     name=$2
 
-    if [ $(backup.system.utils.contains "${backup.descriptions_backupDescriptionNames_[@]}" "${name}") == "n" ]
+    if [ $(bfe.system.utils.contains "${bfe.descriptions_backupDescriptionNames_[@]}" "${name}") == "n" ]
     then
-        backup.system.log.error "Backup description [${name}] does not exist."
+        bfe.system.log.error "Backup description [${name}] does not exist."
     else
-        backup.description ${object_name} ${backup.descriptions_args_} ${name}
+        bfe.description ${object_name} ${bfe.descriptions_args_} ${name}
 
         # TODO ANFO Load all the data for the description from the arrays...
 
         # Read the details
-        array_name=backup.descriptions_backupDescriptionProperties`${object_name}.name`_
+        array_name=bfe.descriptions_backupDescriptionProperties`${object_name}.name`_
         eval "array_keys=\${!${array_name}[@]}"
         for i in ${array_keys}
         do
@@ -158,7 +158,7 @@ backup.descriptions.getBackupDescription()
         done
 
         # Read the data
-        data_name=backup.descriptions_backupDescriptionData`${object_name}.name`_
+        data_name=bfe.descriptions_backupDescriptionData`${object_name}.name`_
         eval "data_indexes=\${!${data_name}[@]}"
         local a=()
         for index in ${data_indexes}
@@ -170,6 +170,6 @@ backup.descriptions.getBackupDescription()
             fi
         done
 
-        # TODO ANFO Maybe it would be simpler to create object instances for all backup descriptions loaded... instead of using the arrays??
+        # TODO ANFO Maybe it would be simpler to create object instances for all bfe.descriptions loaded... instead of using the arrays??
     fi
 }
