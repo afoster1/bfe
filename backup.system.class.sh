@@ -49,8 +49,7 @@ backup.system.stdout.printArray(){
     local msg=$1
     shift 1
     local a b
-    a=$($@)
-    a="declare -a b=${a#*=}"
+    a="declare -a b=$($@)"
     eval "$a"
     local list=""
     local first=true
@@ -183,8 +182,11 @@ backup.system.utils.propertyAccessor()
             local a="\${${name}Array${BASH_REMATCH[0]}}"
             eval "printf '%s\n' \"${a}\""
         else
-            # Get the array values
-            declare -p ${name}Array
+            # Get the array values, in a form that cal be used in a declare
+            # statement for convenience
+            local value="$(declare -p ${name}Array)"
+            local value="${value#*=}"
+            echo ${value}
         fi
     else
         if [ "${operation}" == "=" ]
