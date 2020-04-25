@@ -20,15 +20,16 @@ bfe.handler.descriptionName() { bfe.system.utils.propertyAccessor bfe.handler_pr
 
 bfe.handler.process()
 {
-    local dn=`bfe.handler.descriptionName`
-    type=`${dn}.type`
-    ${ECHO_CMD} "Processing backup description: `${dn}.name`"
+    local descriptionName=`bfe.handler.descriptionName`
+    local backupName=`${descriptionName}.name`
+    local type=`${descriptionName}.type`
+    ${ECHO_CMD} "Processing backup description: ${backupName}"
 
     # Instantiate the specific bfe.handler
     unset agent
     case ${type} in
         filesystem_restic)
-            bfe.restic_agent agent ${bfe.handler_args_} ${dn}
+            bfe.restic_agent agent ${bfe.handler_args_} ${descriptionName}
             ;;
 
         git_mirror)

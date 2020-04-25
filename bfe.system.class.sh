@@ -146,6 +146,140 @@ bfe.system.utils.contains()
     return 1
 }
 
+bfe.system.utils.isOfflineMediaMounted()
+{
+    local label=$1
+
+    # Discover the device id from the label.
+    device_id=$( ${BLKID_CMD} | ${GREP_CMD} \"${label}\" | ${CUT_CMD} -d : -f 1)
+    if [ -z "${device_id}" ]
+    then
+        ${ECHO_CMD} "n"
+        return 0
+    fi
+
+    # Check the device is mounted
+    device_is_mounted=`${GREP_CMD} ${device_id} /etc/mtab`
+    if [ -z "${device_is_mounted}" ]
+    then
+        ${ECHO_CMD} "n"
+        return 0
+    fi
+
+    ${ECHO_CMD} "y"
+    return 1
+}
+
+bfe.system.utils.isOfflineMediaAvailable()
+{
+    local label=$1
+
+    # Discover the device id from the label.
+    device_id=$( ${BLKID_CMD} | ${GREP_CMD} \"${label}\" | ${CUT_CMD} -d : -f 1)
+    if [ -z "${device_id}" ]
+    then
+        ${ECHO_CMD} "n"
+        return 0
+    fi
+
+    ${ECHO_CMD} "y"
+    return 1
+}
+
+bfe.system.utils.mountOfflineMedia()
+{
+    label=$1
+    medium_dir=$2
+
+    # Discover the device id from the label.
+    device_id=$( ${BLKID_CMD} | ${GREP_CMD} \"${label}\" | ${CUT_CMD} -d : -f 1)
+    if [ -z "${device_id}" ]
+    then
+        ${ECHO_CMD} "n"
+        return 0
+    fi
+
+    # Pull in useful variables from udevadm for the device.  Quote everything just in case.
+    eval `${UDEVADM_CMD} info -q property -n ${device_id} | ${SED_CMD} 's/^/export /; s/=/="/; s/$/"/'`
+    if [ -z "${ID_FS_LABEL}" ] || [ -z "${ID_FS_TYPE}" ]
+    then
+        ${ECHO_CMD} "n"
+        return 0
+    fi
+
+    # Create the mount point then verify it exists.
+    if [ ! -d "${medium_dir}/${ID_FS_LABEL}" ]; then
+        ${MKDIR_CMD} -p "${medium_dir}/${ID_FS_LABEL}"
+    fi
+    if [ ! -d "${medium_dir}/${ID_FS_LABEL}" ]; then
+        ${ECHO_CMD} "n"
+        return 0
+    fi
+
+    # Mount the device
+    #
+    # If expecting thumbdrives, you probably want to avoid corruption.
+    #      mount -t auto -o sync,noatime [...]
+    #
+    # If drive is VFAT/NFTS, this mounts the filesystem such that all files
+    # are owned by a std user instead of by root.  Change to your user's UID
+    # (listed in /etc/passwd).  You may also want "gid=1000" and/or "umask=022", eg:
+    #      mount -t auto -o uid=1000,gid=1000 [...]
+    #
+    case "$ID_FS_TYPE" in
+
+        vfat) ${MOUNT_CMD} -t vfat -o sync,noatime,uid=1000,gid=1000 ${device_id} "/${medium_dir}/${ID_FS_LABEL}"
+        ;;
+
+        # I like the locale setting for ntfs
+        ntfs) ${MOUNT_CMD} -t auto -o sync,noatime,uid=1000,gid=1000,locale=en_US.UTF-8 ${device_id} "/${medium_dir}/${ID_FS_LABEL}"
+        ;;
+
+        # ext2/3/4 don't like uid option
+        ext*) ${MOUNT_CMD} -t auto -o sync,noatime ${device_id} "/${medium_dir}/${ID_FS_LABEL}"
+        ;;
+
+    esac
+
+    # Check the device is mounted
+    device_is_mounted=`${GREP_CMD} ${device_id} /etc/mtab`
+    if [ -z "${device_is_mounted}" ]
+    then
+        ${ECHO_CMD} "n"
+        return 0
+    fi
+
+    ${ECHO_CMD} "y"
+    return 1
+}
+
+bfe.system.utils.doMount()
+{
+    local description_name=$1
+    local medium_type=$2
+    local medium_label=$3
+    local medium_dir=$4
+
+    if [ "${medium_type}" = "usbdrive" ]
+    then
+        if [ $(bfe.system.utils.isOfflineMediaMounted "${medium_label}") == "n" ]
+        then
+            if [ $(bfe.system.utils.isOfflineMediaAvailable "${medium_label}") == "n" ]
+            then
+                bfe.system.log.error "Backup description [${description_name}] requires backup medium labelled [${medium_label}] which is unavailable... (Note: May also need root access.)"
+            else
+                bfe.system.log.info "ToDo AnFo"
+                if [ $(bfe.system.utils.mountOfflineMedia "${medium_label}" "${medium_dir}") == "n" ]
+                then
+                    bfe.system.log.error "Backup description [${description_name}] requires backup medium labelled [${medium_label}] which is not mounted."
+                else
+                    bfe.system.log.info "Backup medium [${medium_label}] mounted."
+                fi
+            fi
+        fi
+    fi
+}
+
 bfe.system.utils.propertyAccessor()
 {
     properties="$1"
