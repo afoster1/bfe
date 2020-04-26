@@ -20,16 +20,16 @@ bfe.handler.descriptionName() { bfe.system.utils.propertyAccessor bfe.handler_pr
 
 bfe.handler.process()
 {
-    local descriptionName=`bfe.handler.descriptionName`
-    local backupName=`${descriptionName}.name`
-    local type=`${descriptionName}.type`
-    ${ECHO_CMD} "Processing backup description: ${backupName}"
+    local object_name=`bfe.handler.descriptionName`
+    local description_name=`${object_name}.name`
+    local type=`${object_name}.type`
+    ${ECHO_CMD} "Processing backup description: ${description_name}"
 
     # Instantiate the specific bfe.handler
     unset agent
     case ${type} in
         filesystem_restic)
-            bfe.restic_agent agent ${bfe.handler_args_} ${descriptionName}
+            bfe.restic_agent agent ${bfe.handler_args_} ${object_name}
             ;;
 
         git_mirror)
@@ -46,10 +46,21 @@ bfe.handler.process()
         do
             ${ECHO_CMD} "-> Action: ${action}"
 
-            # TODO handle all action types mount, unmount, defaul, stage, backup, restore, cleanup, verify, status
+            # TODO handle all action types default, stage, backup, restore, cleanup, verify, status
             case ${action} in
                 mount)
-                    agent.doMount
+                    # The "mount" action is the same for all agents
+                    local medium_type=`${object_name}.medium`
+                    local medium_label=`${object_name}.mediumLabel`
+                    local medium_dir=`${bfe.handler_args_}.backupMediumDir`
+                    bfe.system.utils.doMount "${description_name}"  "${medium_type}" "${medium_label}" "${medium_dir}"
+                    ;;
+                unmount)
+                    # The "unmount" action is the same for all agents
+                    local medium_type=`${object_name}.medium`
+                    local medium_label=`${object_name}.mediumLabel`
+                    local medium_dir=`${bfe.handler_args_}.backupMediumDir`
+                    bfe.system.utils.doUnmount "${description_name}"  "${medium_type}" "${medium_label}" "${medium_dir}"
                     ;;
                 *)
                     bfe.system.log.error "Unable to process action '${action}'"

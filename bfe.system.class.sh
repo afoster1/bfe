@@ -13,7 +13,7 @@ bfe.system.stdout.printMessageAndValue(){
     local varName=$2
     local varValue=$(${varName})
 
-    shift 
+    shift
 
     if [ ${#varValue} -gt 0 ]
     then
@@ -151,7 +151,7 @@ bfe.system.utils.isOfflineMediaMounted()
     local label=$1
 
     # Discover the device id from the label.
-    device_id=$( ${BLKID_CMD} | ${GREP_CMD} \"${label}\" | ${CUT_CMD} -d : -f 1)
+    local device_id=$( ${BLKID_CMD} | ${GREP_CMD} \"${label}\" | ${CUT_CMD} -d : -f 1)
     if [ -z "${device_id}" ]
     then
         ${ECHO_CMD} "n"
@@ -159,7 +159,7 @@ bfe.system.utils.isOfflineMediaMounted()
     fi
 
     # Check the device is mounted
-    device_is_mounted=`${GREP_CMD} ${device_id} /etc/mtab`
+    local device_is_mounted=`${GREP_CMD} ${device_id} /etc/mtab`
     if [ -z "${device_is_mounted}" ]
     then
         ${ECHO_CMD} "n"
@@ -175,7 +175,7 @@ bfe.system.utils.isOfflineMediaAvailable()
     local label=$1
 
     # Discover the device id from the label.
-    device_id=$( ${BLKID_CMD} | ${GREP_CMD} \"${label}\" | ${CUT_CMD} -d : -f 1)
+    local device_id=$( ${BLKID_CMD} | ${GREP_CMD} \"${label}\" | ${CUT_CMD} -d : -f 1)
     if [ -z "${device_id}" ]
     then
         ${ECHO_CMD} "n"
@@ -188,11 +188,11 @@ bfe.system.utils.isOfflineMediaAvailable()
 
 bfe.system.utils.mountOfflineMedia()
 {
-    label=$1
-    medium_dir=$2
+    local label=$1
+    local medium_dir=$2
 
     # Discover the device id from the label.
-    device_id=$( ${BLKID_CMD} | ${GREP_CMD} \"${label}\" | ${CUT_CMD} -d : -f 1)
+    local device_id=$( ${BLKID_CMD} | ${GREP_CMD} \"${label}\" | ${CUT_CMD} -d : -f 1)
     if [ -z "${device_id}" ]
     then
         ${ECHO_CMD} "n"
@@ -242,8 +242,59 @@ bfe.system.utils.mountOfflineMedia()
     esac
 
     # Check the device is mounted
-    device_is_mounted=`${GREP_CMD} ${device_id} /etc/mtab`
+    local device_is_mounted=`${GREP_CMD} ${device_id} /etc/mtab`
     if [ -z "${device_is_mounted}" ]
+    then
+        ${ECHO_CMD} "n"
+        return 0
+    fi
+
+    ${ECHO_CMD} "y"
+    return 1
+}
+
+bfe.system.utils.unmountOfflineMedia()
+{
+    local label=$1
+    local medium_dir=$2
+
+    # Discover the device id from the label.
+    local device_id=$( ${BLKID_CMD} | ${GREP_CMD} \"${label}\" | ${CUT_CMD} -d : -f 1)
+    if [ -z "${device_id}" ]
+    then
+        ${ECHO_CMD} "n"
+        return 0
+    fi
+
+    # Pull in useful variables from udevadm for the device.  Quote everything just in case.
+    eval `${UDEVADM_CMD} info -q property -n ${device_id} | ${SED_CMD} 's/^/export /; s/=/="/; s/$/"/'`
+    if [ -z "${ID_FS_LABEL}" ] || [ -z "${ID_FS_TYPE}" ]
+    then
+        ${ECHO_CMD} "n"
+        return 0
+    fi
+
+    # Check the device is mounted
+    local device_is_mounted=`${GREP_CMD} ${device_id} /etc/mtab`
+    if [ -z "${device_is_mounted}" ]
+    then
+        ${ECHO_CMD} "n"
+        return 0
+    fi
+
+    # Unmount the device
+    ${UMOUNT_CMD} -l ${device_id}
+
+    # Remove the directory then verify it does not exist
+    ${RMDIR_CMD} "${medium_dir}/${ID_FS_LABEL}"
+    if [ -d "${medium_dir}/${ID_FS_LABEL}" ]; then
+        ${ECHO_CMD} "n"
+        return 0
+    fi
+
+    # Check the device is not mounted
+    local device_is_mounted=`${GREP_CMD} ${device_id} /etc/mtab`
+    if [ ! -z "${device_is_mounted}" ]
     then
         ${ECHO_CMD} "n"
         return 0
@@ -268,7 +319,6 @@ bfe.system.utils.doMount()
             then
                 bfe.system.log.error "Backup description [${description_name}] requires backup medium labelled [${medium_label}] which is unavailable... (Note: May also need root access.)"
             else
-                bfe.system.log.info "ToDo AnFo"
                 if [ $(bfe.system.utils.mountOfflineMedia "${medium_label}" "${medium_dir}") == "n" ]
                 then
                     bfe.system.log.error "Backup description [${description_name}] requires backup medium labelled [${medium_label}] which is not mounted."
@@ -280,15 +330,33 @@ bfe.system.utils.doMount()
     fi
 }
 
+bfe.system.utils.doUnmount()
+{
+    local description_name=$1
+    local medium_type=$2
+    local medium_label=$3
+    local medium_dir=$4
+
+    if [ "${medium_type}" = "usbdrive" ]
+    then
+        if [ $(bfe.system.utils.unmountOfflineMedia "${medium_label}" "${medium_dir}") == "n" ]
+        then
+            bfe.system.log.error "Backup description [${description_name}], unable to return to unmounted state for backup medium labelled [${medium_label}]."
+        else
+            bfe.system.log.info "Backup medium [${medium_label}] unmounted."
+        fi
+    fi
+}
+
 bfe.system.utils.propertyAccessor()
 {
-    properties="$1"
-    operation="$2"
-    parameter1="$3"
+    local properties="$1"
+    local operation="$2"
+    local parameter1="$3"
 
     # Find the array id that matches the property being set, using the name of the property function being used.
-    object_name=${properties%_*}
-    name=${object_name}_$(echo "${FUNCNAME[1]}" | sed "s/.*\.\(.*\)$/\1/g") 
+    local object_name=${properties%_*}
+    local name=${object_name}_$(echo "${FUNCNAME[1]}" | sed "s/.*\.\(.*\)$/\1/g")
     eval "id=\${${name}}"
 
     local arrayPrefixes=( "array" )
@@ -298,7 +366,7 @@ bfe.system.utils.propertyAccessor()
         if [ "${operation}" == "=" ]
         then
             # Set the property with the named array provided
-            parameter1=$(eval "printf '%s\n' \"\$${parameter1}\"")
+            local parameter1=$(eval "printf '%s\n' \"\$${parameter1}\"")
             local a="declare -ga ${name}Array=${parameter1#*=}"
             eval "${a}"
         elif [ "${operation}" == "+=" ]

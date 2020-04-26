@@ -15,18 +15,15 @@ bfe.restic_agent.init(){
     bfe.restic_agent_args_=$1
 
     bfe.restic_agent.descriptionName = $2
+    bfe.restic_agent=true
 }
 
 bfe.restic_agent.descriptionName() { bfe.system.utils.propertyAccessor bfe.restic_agent_properties $1 $2
 }
 
-bfe.restic_agent.doMount()
+bfe.restic_agent.doAction()
 {
+    # TODO ANFO Implement actions
     local object_name=`bfe.restic_agent.descriptionName`
-
     local description_name=`${object_name}.name`
-    local medium_type=`${object_name}.medium`
-    local medium_label=`${object_name}.mediumLabel`
-    local medium_dir=`${bfe.restic_agent_args_}.backupMediumDir`
-    bfe.system.utils.doMount "${description_name}"  "${medium_type}" "${medium_label}" "${medium_dir}"
 }
