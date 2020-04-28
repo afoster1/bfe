@@ -1,9 +1,9 @@
 # Fields
-bfe_system_log_args_= # Command line arguments
+bfe_system_args_= # Command line arguments
 bfe_system_log_filename_= # The filename to be used for the log
 
 bfe.system.init() {
-    bfe_system_log_args_=$1
+    bfe_system_args_=$1
 
     bfe.system.log.init
 }
@@ -63,12 +63,12 @@ bfe.system.stdout.printArray(){
 }
 
 bfe.system.log.init() {
-    local backupName=`${bfe_system_log_args_}.backupName`
-    local workDir=`${bfe_system_log_args_}.workDir`
-    local logSubDir=`${bfe_system_log_args_}.logSubDir`
-    local hostname=`${bfe_system_log_args_}.hostname`
+    local backupName=`${bfe_system_args_}.backupName`
+    local workDir=`${bfe_system_args_}.workDir`
+    local logSubDir=`${bfe_system_args_}.logSubDir`
+    local hostname=`${bfe_system_args_}.hostname`
 
-    if [ "`${bfe_system_log_args_}.useLog`" = true ]
+    if [ "`${bfe_system_args_}.useLog`" = true ]
     then
         if [ -n "${backupName}" ]
         then
@@ -86,8 +86,17 @@ bfe.system.log.init() {
     fi
 }
 
+bfe.system.log.cmd() {
+    if [ "`${bfe_system_args_}.useLog`" = true ]
+    then
+        ${ECHO_CMD} "CMD:$@" >> ${bfe_system_log_filename_}.log
+    else
+        ${ECHO_CMD} "CMD:$@"
+    fi
+}
+
 bfe.system.log.info() {
-    if [ "`${bfe_system_log_args_}.useLog`" = true ]
+    if [ "`${bfe_system_args_}.useLog`" = true ]
     then
         ${ECHO_CMD} "INFO:$@" >> ${bfe_system_log_filename_}.log
     else
@@ -97,7 +106,7 @@ bfe.system.log.info() {
 
 bfe.system.log.error() {
     ${ECHO_CMD} "ERROR:$@"
-    if [ "`${bfe_system_log_args_}.useLog`" = true ]
+    if [ "`${bfe_system_args_}.useLog`" = true ]
     then
         ${ECHO_CMD} "ERROR:$@" >> ${bfe_system_log_filename_}.log
         ${ECHO_CMD} "ERROR:$@" 1>&2 >> ${bfe_system_log_filename_}.err
@@ -344,6 +353,30 @@ bfe.system.utils.doUnmount()
             bfe.system.log.error "Backup description [${description_name}], unable to return to unmounted state for backup medium labelled [${medium_label}]."
         else
             bfe.system.log.info "Backup medium [${medium_label}] unmounted."
+        fi
+    fi
+}
+
+bfe.system.utils.run()
+{
+    # Strip out any confidential information from the command
+    local cmd=`${ECHO_CMD} "$@" | ${SED_CMD} -r 's/^PASSPHRASE=[^ ]* /PASSPHRASE=**** /g'`
+    local cmd=`${ECHO_CMD} "${cmd}" | ${SED_CMD} -r 's/smtp-auth-password=[^ ]* /smtp-auth-password=**** /g'`
+
+    bfe.system.log.cmd "${cmd}"
+
+    if ! `${bfe_system_args_}.dryRun`
+    then
+        if `${bfe_system_args_}.useLog`
+        then
+            eval "$@" >> ${bfe_system_log_filename_}.log 2>> ${bfe_system_log_filename_}.err
+        else
+            eval "$@"
+        fi
+
+        if [ $? -ne 0 ]
+        then
+            bfe.system.log.error "Command [${cmd}] returned [$?]."
         fi
     fi
 }

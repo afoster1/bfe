@@ -62,6 +62,9 @@ bfe.handler.process()
                     local medium_dir=`${bfe.handler_args_}.backupMediumDir`
                     bfe.system.utils.doUnmount "${description_name}"  "${medium_type}" "${medium_label}" "${medium_dir}"
                     ;;
+                stage)
+                    bfe.handler.doStage "${object_name}" agent
+                    ;;
                 *)
                     bfe.system.log.error "Unable to process action '${action}'"
                     ;;
@@ -70,4 +73,16 @@ bfe.handler.process()
     else
         bfe.system.log.error "Unable to process backup type '${type}'"
     fi
+}
+
+bfe.handler.doStage()
+{
+    local object_name=$1
+    local agent_name=$2
+    local description_name=`${object_name}.name`
+    local type=`${object_name}.type`
+
+    bfe.system.log.info "Staging [${description_name}]"
+    ${agent_name}.stage
+    bfe.system.log.info "Staging [${description_name}] - OK"
 }

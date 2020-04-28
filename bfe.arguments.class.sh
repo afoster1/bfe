@@ -29,6 +29,8 @@ bfe.arguments_useLog=21
 bfe.arguments_dryRun=22
 bfe.arguments_certificateDatabase=23
 bfe.arguments_verbose=24
+bfe.arguments_auditFilelistFilename=25
+bfe.arguments_auditHashesFilename=26
 
 bfe.arguments_actionsArray=()
 bfe.arguments_backupGroupsArray=()
@@ -82,6 +84,18 @@ bfe.arguments.dryRun() { bfe.system.utils.propertyAccessor bfe.arguments_propert
 bfe.arguments.certificateDatabase() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
 bfe.arguments.verbose() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+}
+bfe.arguments.auditFilelistFilename() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+}
+bfe.arguments.auditHashesFilename() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+}
+
+bfe.arguments.init()
+{
+    bfe.arguments.dryRun = false
+    bfe.arguments.useLog = false
+    bfe.arguments.fullBackup = false
+    bfe.arguments.sendEmail = false
 }
 
 bfe.arguments.parse()
@@ -304,6 +318,9 @@ bfe.arguments.setDefaults()
     then
         bfe.arguments.actions += default
     fi
+
+    bfe.arguments.auditFilelistFilename = "audit_filelist.txt"
+    bfe.arguments.auditHashesFilename = "audit_hashes.txt"
 }
 
 bfe.arguments.readConfigurationFile()

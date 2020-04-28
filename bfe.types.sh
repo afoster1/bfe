@@ -9,36 +9,38 @@
 
 bfe.arguments()
 {
-    . <(sed "s/bfe.arguments/$1/g" bfe.arguments.class.sh)
+    local obj_name=$1
+    . <(sed "s/bfe.arguments/${obj_name}/g" bfe.arguments.class.sh)
+    ${obj_name}.init
 }
 
 bfe.descriptions(){
-    local objName=$1
+    local obj_name=$1
     local args=$2
-    . <(sed "s/bfe.descriptions/${objName}/g" bfe.descriptions.class.sh)
-    ${objName}.init ${args}
+    . <(sed "s/bfe.descriptions/${obj_name}/g" bfe.descriptions.class.sh)
+    ${obj_name}.init ${args}
 }
 
 bfe.description(){
-    local objName=$1
+    local obj_name=$1
     local args=$2
     local descriptionName=$3
-    . <(sed "s/bfe.description/${objName}/g" bfe.description.class.sh)
-    ${objName}.init ${args} ${descriptionName}
+    . <(sed "s/bfe.description/${obj_name}/g" bfe.description.class.sh)
+    ${obj_name}.init ${args} ${descriptionName}
 }
 
 bfe.handler(){
-    local objName=$1
+    local obj_name=$1
     local args=$2
     local descriptionName=$3
-    . <(sed "s/bfe.handler/${objName}/g" bfe.handler.class.sh)
-    ${objName}.init ${args} ${descriptionName}
+    . <(sed "s/bfe.handler/${obj_name}/g" bfe.handler.class.sh)
+    ${obj_name}.init ${args} ${descriptionName}
 }
 
 bfe.restic_agent(){
-    local objName=$1
+    local obj_name=$1
     local args=$2
     local descriptionName=$3
-    . <(sed "s/bfe.restic_agent/${objName}/g" bfe.restic_agent.class.sh)
-    ${objName}.init ${args} ${descriptionName}
+    . <(sed "s/bfe.restic_agent/${obj_name}/g" bfe.restic_agent.class.sh)
+    ${obj_name}.init ${args} ${descriptionName}
 }
