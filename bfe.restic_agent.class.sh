@@ -81,6 +81,62 @@ bfe.restic_agent.stage()
     bfe.restic_agent.generate_audit_hashes_using_find "${destination}/" "${audit_filelist_filename}" "${audit_hashes_filename}"
 }
 
+bfe.restic_agent.backup()
+{
+    local object_name=`bfe.restic_agent.descriptionName`
+    local description_name=`${object_name}.name`
+    local backup_medium=`${object_name}.medium`
+    local backup_medium_label=`${object_name}.mediumLabel`
+    local work_dir=`${bfe.restic_agent_args_}.workDir`
+    local stage_sub_dir=`${bfe.restic_agent_args_}.stageSubDir`
+    local backup_sub_dir=`${bfe.restic_agent_args_}.backupSubDir`
+    local backup_medium_dir=`${bfe.restic_agent_args_}.backupMediumDir`
+    local hostname=`${bfe.restic_agent_args_}.hostname`
+    local passphrase=`${bfe.restic_agent_args_}.passphrase`
+    local backup_description_filename=`${bfe.restic_agent_args_}.backupDescriptionFilename`
+
+    local orig_dir=$(pwd)
+    local source_dir=${work_dir}/${stage_sub_dir}/${description_name}
+    case "${backup_medium}" in
+        local)
+            local destination_dir="${work_dir}/${backup_sub_dir}/${hostname}/${description_name}"
+            ;;
+        usbdrive)
+            local destination_dir="${backup_medium_dir}/${backup_medium_label}/${hostname}/${description_name}"
+            ;;
+    esac
+
+    bfe.system.utils.run "${MKDIR_CMD} -p ${destination_dir}"
+
+    if [ $(bfe.restic_agent.is_restic_repo_initialised "${destination_dir}" "${passphrase}") == "n" ]
+    then
+        bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} init --repo ${destination_dir}"
+    fi
+
+    bfe.system.utils.run "cd ${source_dir}"
+    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} backup --repo ${destination_dir} backup . --verbose"
+
+    bfe.system.utils.run "cd ${orig_dir}"
+    bfe.system.utils.run "cp -f bfe.*.sh ${destination_dir}" # TODO Make this less fragile?
+    bfe.system.utils.run "cp -f ${backup_description_filename} ${destination_dir}"
+}
+
+bfe.restic_agent.is_restic_repo_initialised()
+{
+    local repo_dir=$1
+    local passphrase=$2
+
+    local result=$( RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${repo_dir} snapshots )
+    if [ -z "${result}" ]
+    then
+        ${ECHO_CMD} "n"
+        return 0
+    fi
+
+    ${ECHO_CMD} "y"
+    return 1
+}
+
 bfe.restic_agent.generate_audit_hashes_using_rsync()
 {
     local source_dir=$1

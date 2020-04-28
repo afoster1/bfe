@@ -14,7 +14,7 @@ bfe.arguments_sendEmail=6
 bfe.arguments_emailFrom=7
 bfe.arguments_hostname=8
 bfe.arguments_backupMedium=9
-bfe.arguments_backupMediumLabel=10
+bfe.arguments_backupMediumLabel=10 # TODO Check if this is being used as the label is in the description?
 bfe.arguments_workDir=11
 bfe.arguments_backupMediumDir=12
 bfe.arguments_stageSubDir=13
@@ -76,7 +76,7 @@ bfe.arguments.actions() { bfe.system.utils.propertyAccessor bfe.arguments_proper
 bfe.arguments.backupGroups() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
 bfe.arguments.fullBackup() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
-} 
+}
 bfe.arguments.useLog() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
 bfe.arguments.dryRun() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2

@@ -65,6 +65,9 @@ bfe.handler.process()
                 stage)
                     bfe.handler.doStage "${object_name}" agent
                     ;;
+                backup)
+                    bfe.handler.doBackup "${object_name}" agent
+                    ;;
                 *)
                     bfe.system.log.error "Unable to process action '${action}'"
                     ;;
@@ -80,9 +83,19 @@ bfe.handler.doStage()
     local object_name=$1
     local agent_name=$2
     local description_name=`${object_name}.name`
-    local type=`${object_name}.type`
 
     bfe.system.log.info "Staging [${description_name}]"
     ${agent_name}.stage
     bfe.system.log.info "Staging [${description_name}] - OK"
+}
+
+ bfe.handler.doBackup()
+{
+    local object_name=$1
+    local agent_name=$2
+    local description_name=`${object_name}.name`
+
+    bfe.system.log.info "Backup [${description_name}]"
+    ${agent_name}.backup
+    bfe.system.log.info "Backup [${description_name}] - OK"
 }
