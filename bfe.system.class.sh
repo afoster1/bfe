@@ -360,7 +360,8 @@ bfe.system.utils.doUnmount()
 bfe.system.utils.run()
 {
     # Strip out any confidential information from the command
-    local cmd=`${ECHO_CMD} "$@" | ${SED_CMD} -r 's/^PASSPHRASE=[^ ]* /PASSPHRASE=**** /g'`
+    local cmd=`${ECHO_CMD} "$@" | ${SED_CMD} -r 's/^RESTIC_PASSWORD=[^ ]* /RESTIC_PASSWORD=**** /g'`
+    local cmd=`${ECHO_CMD} "${cmd}" | ${SED_CMD} -r 's/^PASSPHRASE=[^ ]* /PASSPHRASE=**** /g'`
     local cmd=`${ECHO_CMD} "${cmd}" | ${SED_CMD} -r 's/smtp-auth-password=[^ ]* /smtp-auth-password=**** /g'`
 
     bfe.system.log.cmd "${cmd}"
