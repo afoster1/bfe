@@ -81,6 +81,9 @@ bfe.handler.process()
                 cleanup)
                     bfe.handler.doCleanup "${object_name}" agent
                     ;;
+                status)
+                    bfe.handler.doStatus "${object_name}" agent
+                    ;;
                 *)
                     bfe.system.log.error "Unable to process action '${action}'"
                     ;;
@@ -133,4 +136,15 @@ bfe.handler.doCleanup()
     bfe.system.log.info "Cleanup [${description_name}]"
     ${agent_name}.cleanup
     bfe.system.log.info "Cleanup [${description_name}] - OK"
+}
+
+bfe.handler.doStatus()
+{
+    local object_name=$1
+    local agent_name=$2
+    local description_name=`${object_name}.name`
+
+    bfe.system.log.info "Status [${description_name}]"
+    ${agent_name}.status
+    bfe.system.log.info "Status [${description_name}] - OK"
 }

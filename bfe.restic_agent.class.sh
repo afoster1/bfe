@@ -138,12 +138,12 @@ bfe.restic_agent.restore()
     local destination_dir=
     case ${backup_medium} in
         local)
-            source_dir=${work_dir}/${backup_sub_dir}/${description_name}
-            destination_dir=${work_dir}/${restore_sub_dir}/${backup_medium}/${description_name}
+            local source_dir=${work_dir}/${backup_sub_dir}/${description_name}
+            local destination_dir=${work_dir}/${restore_sub_dir}/${backup_medium}/${description_name}
             ;;
         usbdrive)
-            source_dir=${backup_medium_dir}/${backup_medium_label}/${hostname}/${description_name}
-            destination_dir=${work_dir}/${restore_sub_dir}/${backup_medium_label}/${description_name}
+            local source_dir=${backup_medium_dir}/${backup_medium_label}/${hostname}/${description_name}
+            local destination_dir=${work_dir}/${restore_sub_dir}/${backup_medium_label}/${description_name}
             ;;
     esac
 
@@ -167,10 +167,10 @@ bfe.restic_agent.cleanup()
     local source_dir=
     case ${backup_medium} in
         local)
-            source_dir=${work_dir}/${backup_sub_dir}/${description_name}/
+            local source_dir=${work_dir}/${backup_sub_dir}/${description_name}/
             ;;
         usbdrive)
-            source_dir=${backup_medium_dir}/${backup_medium_label}/${hostname}/${description_name}/
+            local source_dir=${backup_medium_dir}/${backup_medium_label}/${hostname}/${description_name}/
             ;;
     esac
 
@@ -179,6 +179,31 @@ bfe.restic_agent.cleanup()
     bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} forget --keep-last ${keep_full} --prune"
     bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} snapshots"
     bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} check"
+}
+
+bfe.restic_agent.status()
+{
+    local object_name=`bfe.restic_agent.descriptionName`
+    local description_name=`${object_name}.name`
+    local backup_medium=`${object_name}.medium`
+    local backup_medium_label=`${object_name}.mediumLabel`
+    local work_dir=`${bfe.restic_agent_args_}.workDir`
+    local backup_sub_dir=`${bfe.restic_agent_args_}.backupSubDir`
+    local backup_medium_dir=`${bfe.restic_agent_args_}.backupMediumDir`
+    local hostname=`${bfe.restic_agent_args_}.hostname`
+    local passphrase=`${bfe.restic_agent_args_}.passphrase`
+
+    local source_dir=
+    case ${backup_medium} in
+        local)
+            local source_dir=${work_dir}/${backup_sub_dir}/${description_name}/
+            ;;
+        usbdrive)
+            local source_dir=${backup_medium_dir}/${backup_medium_label}/${hostname}/${description_name}/
+            ;;
+    esac
+
+    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} snapshots --repo ${source_dir}"
 }
 
 bfe.restic_agent.is_restic_repo_initialised()
