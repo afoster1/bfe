@@ -151,6 +151,41 @@ bfe.restic_agent.restore()
     bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} restore latest --repo ${source_dir} --target ${destination_dir}/"
 }
 
+bfe.restic_agent.verify()
+{
+    local object_name=`bfe.restic_agent.descriptionName`
+    local description_name=`${object_name}.name`
+    local backup_medium=`${object_name}.medium`
+    local backup_medium_label=`${object_name}.mediumLabel`
+    local work_dir=`${bfe.restic_agent_args_}.workDir`
+    local backup_sub_dir=`${bfe.restic_agent_args_}.backupSubDir`
+    local restore_sub_dir=`${bfe.restic_agent_args_}.restoreSubDir`
+    local backup_medium_dir=`${bfe.restic_agent_args_}.backupMediumDir`
+    local hostname=`${bfe.restic_agent_args_}.hostname`
+    local passphrase=`${bfe.restic_agent_args_}.passphrase`
+    local audit_filelist_filename=`${bfe.restic_agent_args_}.auditFilelistFilename`
+    local audit_hashes_filename=`${bfe.restic_agent_args_}.auditHashesFilename`
+
+    local source_dir=
+    local restore_dir=
+    case ${backup_medium} in
+        local)
+            local source_dir=${work_dir}/${backup_sub_dir}/${description_name}
+            local restore_dir=${work_dir}/${restore_sub_dir}/${backup_medium}/${description_name}
+            ;;
+        usbdrive)
+            local source_dir=${backup_medium_dir}/${backup_medium_label}/${hostname}/${description_name}
+            local restore_dir=${work_dir}/${restore_sub_dir}/${backup_medium_label}/${description_name}
+            ;;
+    esac
+
+    # Verify the backup data first.
+    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} check --read-data"
+
+    # Audit the restored files against the filename hashes
+    bfe.restic_agent.verify_audit_hashes "${restore_dir}/" "${audit_filelist_filename}" "${audit_hashes_filename}"
+}
+
 bfe.restic_agent.cleanup()
 {
     local object_name=`bfe.restic_agent.descriptionName`

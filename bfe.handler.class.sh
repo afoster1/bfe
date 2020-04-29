@@ -46,13 +46,12 @@ bfe.handler.process()
         do
             ${ECHO_CMD} "-> Action: ${action}"
 
-            # TODO handle all action types default, stage, backup, restore, cleanup, verify, status
             case ${action} in
                 default)
                     bfe.handler.doStage "${object_name}" agent
                     bfe.handler.doBackup "${object_name}" agent
                     bfe.handler.doRestore "${object_name}" agent
-                    # TODO bfe.handler.doVerify "${object_name}" agent
+                    bfe.handler.doVerify "${object_name}" agent
                     bfe.handler.doCleanup "${object_name}" agent
                     ;;
                 mount)
@@ -77,6 +76,9 @@ bfe.handler.process()
                     ;;
                 restore)
                     bfe.handler.doRestore "${object_name}" agent
+                    ;;
+                verify)
+                    bfe.handler.doVerify "${object_name}" agent
                     ;;
                 cleanup)
                     bfe.handler.doCleanup "${object_name}" agent
@@ -125,6 +127,17 @@ bfe.handler.doRestore()
     bfe.system.log.highlight "Restore [${description_name}] - Started"
     ${agent_name}.restore
     bfe.system.log.highlight "Restore [${description_name}] - Completed"
+}
+
+bfe.handler.doVerify()
+{
+    local object_name=$1
+    local agent_name=$2
+    local description_name=`${object_name}.name`
+
+    bfe.system.log.highlight "Verify [${description_name}] - Started"
+    ${agent_name}.verify
+    bfe.system.log.highlight "Verify [${description_name}] - Completed"
 }
 
 bfe.handler.doCleanup()
