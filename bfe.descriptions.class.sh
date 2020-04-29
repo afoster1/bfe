@@ -107,8 +107,6 @@ bfe.descriptions.getBackupDescription()
     else
         bfe.description ${object_name} ${bfe.descriptions_args_} ${name}
 
-        # TODO ANFO Load all the data for the description from the arrays...
-
         # Read the details
         array_name=bfe.descriptions_backupDescriptionProperties`${object_name}.name`_
         eval "array_keys=\${!${array_name}[@]}"
@@ -170,6 +168,18 @@ bfe.descriptions.getBackupDescription()
             fi
         done
 
+        bfe.descriptions.setDefaults ${object_name}
+
         # TODO ANFO Maybe it would be simpler to create object instances for all bfe.descriptions loaded... instead of using the arrays??
+    fi
+}
+
+bfe.descriptions.setDefaults()
+{
+    object_name=$1
+
+    if [ -z "`${object_name}.keepFull`" ]
+    then
+        ${object_name}.keepFull = "3"
     fi
 }

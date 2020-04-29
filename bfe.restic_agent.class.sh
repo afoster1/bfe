@@ -151,6 +151,36 @@ bfe.restic_agent.restore()
     bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} restore latest --repo ${source_dir} --target ${destination_dir}/"
 }
 
+bfe.restic_agent.cleanup()
+{
+    local object_name=`bfe.restic_agent.descriptionName`
+    local description_name=`${object_name}.name`
+    local backup_medium=`${object_name}.medium`
+    local backup_medium_label=`${object_name}.mediumLabel`
+    local keep_full=`${object_name}.keepFull`
+    local work_dir=`${bfe.restic_agent_args_}.workDir`
+    local backup_sub_dir=`${bfe.restic_agent_args_}.backupSubDir`
+    local backup_medium_dir=`${bfe.restic_agent_args_}.backupMediumDir`
+    local hostname=`${bfe.restic_agent_args_}.hostname`
+    local passphrase=`${bfe.restic_agent_args_}.passphrase`
+
+    local source_dir=
+    case ${backup_medium} in
+        local)
+            source_dir=${work_dir}/${backup_sub_dir}/${description_name}/
+            ;;
+        usbdrive)
+            source_dir=${backup_medium_dir}/${backup_medium_label}/${hostname}/${description_name}/
+            ;;
+    esac
+
+    # Run the cleanup
+    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} snapshots"
+    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} forget --keep-last ${keep_full} --prune"
+    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} snapshots"
+    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} check"
+}
+
 bfe.restic_agent.is_restic_repo_initialised()
 {
     local repo_dir=$1

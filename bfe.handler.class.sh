@@ -71,6 +71,9 @@ bfe.handler.process()
                 restore)
                     bfe.handler.doRestore "${object_name}" agent
                     ;;
+                cleanup)
+                    bfe.handler.doCleanup "${object_name}" agent
+                    ;;
                 *)
                     bfe.system.log.error "Unable to process action '${action}'"
                     ;;
@@ -112,4 +115,15 @@ bfe.handler.doRestore()
     bfe.system.log.info "Restore [${description_name}]"
     ${agent_name}.restore
     bfe.system.log.info "Restore [${description_name}] - OK"
+}
+
+bfe.handler.doCleanup()
+{
+    local object_name=$1
+    local agent_name=$2
+    local description_name=`${object_name}.name`
+
+    bfe.system.log.info "Cleanup [${description_name}]"
+    ${agent_name}.cleanup
+    bfe.system.log.info "Cleanup [${description_name}] - OK"
 }
