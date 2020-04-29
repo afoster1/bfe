@@ -95,6 +95,16 @@ bfe.system.log.cmd() {
     fi
 }
 
+bfe.system.log.highlight() {
+    if [ "`${bfe_system_args_}.useLog`" = true ]
+    then
+        ${ECHO_CMD} "===>:$@" >> ${bfe_system_log_filename_}.log
+        ${ECHO_CMD} "===>:$@" 1>&2 >> ${bfe_system_log_filename_}.err
+    else
+        ${ECHO_CMD} "===>:$@"
+    fi
+}
+
 bfe.system.log.info() {
     if [ "`${bfe_system_args_}.useLog`" = true ]
     then
