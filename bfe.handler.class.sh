@@ -48,6 +48,13 @@ bfe.handler.process()
 
             # TODO handle all action types default, stage, backup, restore, cleanup, verify, status
             case ${action} in
+                default)
+                    bfe.handler.doStage "${object_name}" agent
+                    bfe.handler.doBackup "${object_name}" agent
+                    bfe.handler.doRestore "${object_name}" agent
+                    # TODO bfe.handler.doVerify "${object_name}" agent
+                    bfe.handler.doCleanup "${object_name}" agent
+                    ;;
                 mount)
                     # The "mount" action is the same for all agents
                     local medium_type=`${object_name}.medium`
