@@ -16,3 +16,4 @@ UMOUNT_CMD=`which umount 2> /dev/null`
 RSYNC_CMD=`which rsync 2> /dev/null`
 HASHDEEP_CMD=`which hashdeep 2> /dev/null`
 BASENAME_CMD=`which basename 2> /dev/null`
+SSH_CMD=`which ssh 2> /dev/null`

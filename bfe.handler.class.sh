@@ -25,6 +25,7 @@ bfe.handler.process()
     local type=`${object_name}.type`
     ${ECHO_CMD} "Processing backup description: ${description_name}"
 
+    # TODO Handle other agents: filesystem_rsync, gitolite, gitolite_direct
     # Instantiate the specific bfe.handler
     unset agent
     case ${type} in
@@ -32,8 +33,8 @@ bfe.handler.process()
             bfe.restic_agent agent ${bfe.handler_args_} ${object_name}
             ;;
 
-        git_mirror)
-            # TODO
+        gitolite)
+            bfe.gitolite_agent agent ${bfe.handler_args_} ${object_name}
             ;;
     esac
 

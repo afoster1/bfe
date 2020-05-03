@@ -44,3 +44,11 @@ bfe.restic_agent(){
     . <(sed "s/bfe.restic_agent/${obj_name}/g" bfe.restic_agent.class.sh)
     ${obj_name}.init ${args} ${descriptionName}
 }
+
+bfe.gitolite_agent(){
+    local obj_name=$1
+    local args=$2
+    local descriptionName=$3
+    . <(sed "s/bfe.gitolite_agent/${obj_name}/g" bfe.gitolite_agent.class.sh)
+    ${obj_name}.init ${args} ${descriptionName}
+}
