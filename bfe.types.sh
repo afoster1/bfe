@@ -1,7 +1,7 @@
 # Define all the types defined by the backup front-end app
 
 # Fake OO convention inspired by:
-#    * http://hipersayanx.blogspot.com/2012/12/object-oriented-programming-in-bash.html?m=1 
+#    * http://hipersayanx.blogspot.com/2012/12/object-oriented-programming-in-bash.html?m=1
 #    * https://stackoverflow.com/a/40981277 
 
 . bfe.os.commands.class.sh
@@ -32,9 +32,9 @@ bfe.description(){
 bfe.handler(){
     local obj_name=$1
     local args=$2
-    local descriptionName=$3
+    local descriptions=$3
     . <(sed "s/bfe.handler/${obj_name}/g" bfe.handler.class.sh)
-    ${obj_name}.init ${args} ${descriptionName}
+    ${obj_name}.init ${args} ${descriptions}
 }
 
 bfe.restic_agent(){

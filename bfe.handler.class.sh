@@ -1,40 +1,34 @@
 # Class named "bfe.handler"
 
-# collection of property values
-bfe.handler_properties=()
-
-# properties IDs
-bfe.handler_descriptionName=0
-
 # fields
 bfe.handler_args_= # Command line arguments
+bfe.handler_descriptions_= # Backup descriptions
 
 bfe.handler.init(){
     bfe.handler_args_=$1
-
-    bfe.handler.descriptionName = $2
-}
-
-bfe.handler.descriptionName() { bfe.system.utils.propertyAccessor bfe.handler_properties $1 $2
+    bfe.handler_descriptions_=$2
 }
 
 bfe.handler.process()
 {
-    local object_name=`bfe.handler.descriptionName`
-    local description_name=`${object_name}.name`
-    local type=`${object_name}.type`
+    local description_name=$1
+    local descriptions=${bfe.handler_descriptions_}
+
     ${ECHO_CMD} "Processing backup description: ${description_name}"
+
+    descriptions.getBackupDescription description ${description_name}
+    local type=`description.type`
 
     # TODO Handle other agents: filesystem_rsync, gitolite, gitolite_direct
     # Instantiate the specific bfe.handler
     unset agent
     case ${type} in
         filesystem_restic)
-            bfe.restic_agent agent ${bfe.handler_args_} ${object_name}
+            bfe.restic_agent agent ${bfe.handler_args_} description
             ;;
 
         gitolite)
-            bfe.gitolite_agent agent ${bfe.handler_args_} ${object_name}
+            bfe.gitolite_agent agent ${bfe.handler_args_} description
             ;;
     esac
 
@@ -49,43 +43,43 @@ bfe.handler.process()
 
             case ${action} in
                 default)
-                    bfe.handler.doStage "${object_name}" agent
-                    bfe.handler.doBackup "${object_name}" agent
-                    bfe.handler.doRestore "${object_name}" agent
-                    bfe.handler.doVerify "${object_name}" agent
-                    bfe.handler.doCleanup "${object_name}" agent
+                    bfe.handler.doStage description agent
+                    bfe.handler.doBackup description agent
+                    bfe.handler.doRestore description agent
+                    bfe.handler.doVerify description agent
+                    bfe.handler.doCleanup description agent
                     ;;
                 mount)
                     # The "mount" action is the same for all agents
-                    local medium_type=`${object_name}.medium`
-                    local medium_label=`${object_name}.mediumLabel`
+                    local medium_type=`description.medium`
+                    local medium_label=`description.mediumLabel`
                     local medium_dir=`${bfe.handler_args_}.backupMediumDir`
                     bfe.system.utils.doMount "${description_name}"  "${medium_type}" "${medium_label}" "${medium_dir}"
                     ;;
                 unmount)
                     # The "unmount" action is the same for all agents
-                    local medium_type=`${object_name}.medium`
-                    local medium_label=`${object_name}.mediumLabel`
+                    local medium_type=`description.medium`
+                    local medium_label=`description.mediumLabel`
                     local medium_dir=`${bfe.handler_args_}.backupMediumDir`
                     bfe.system.utils.doUnmount "${description_name}"  "${medium_type}" "${medium_label}" "${medium_dir}"
                     ;;
                 stage)
-                    bfe.handler.doStage "${object_name}" agent
+                    bfe.handler.doStage description agent
                     ;;
                 backup)
-                    bfe.handler.doBackup "${object_name}" agent
+                    bfe.handler.doBackup description agent
                     ;;
                 restore)
-                    bfe.handler.doRestore "${object_name}" agent
+                    bfe.handler.doRestore description agent
                     ;;
                 verify)
-                    bfe.handler.doVerify "${object_name}" agent
+                    bfe.handler.doVerify description agent
                     ;;
                 cleanup)
-                    bfe.handler.doCleanup "${object_name}" agent
+                    bfe.handler.doCleanup description agent
                     ;;
                 status)
-                    bfe.handler.doStatus "${object_name}" agent
+                    bfe.handler.doStatus description agent
                     ;;
                 *)
                     bfe.system.log.error "Unable to process action '${action}'"

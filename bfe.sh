@@ -21,7 +21,10 @@ descriptions.load
 numGroups=`args.backupGroups count`
 if [ "${numGroups}" -gt 0 ]
 then
-    # Need to get a list of backup groups first...
+    # Construct a backup handler
+    bfe.handler handler args descriptions
+
+    # Then get a list of backup descriptions first...
     a=()
     for((i=0; i < ${numGroups}; i++))
     {
@@ -30,10 +33,6 @@ then
     # ...then process them separately
     for n in ${a[@]}
     do
-        # Construct the backup description and give it to the handler for
-        # processing.
-        descriptions.getBackupDescription description ${n}
-        bfe.handler handler args description
-        handler.process
+        handler.process "${n}"
     done
 fi
