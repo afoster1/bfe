@@ -28,7 +28,7 @@ bfe.handler.process()
             ;;
 
         gitolite)
-            bfe.gitolite_agent agent ${bfe.handler_args_} description
+            bfe.gitolite_agent agent ${bfe.handler_args_} description descriptions
             ;;
     esac
 

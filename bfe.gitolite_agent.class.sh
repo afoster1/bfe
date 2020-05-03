@@ -7,18 +7,21 @@ bfe.gitolite_agent=()
 
 # properties IDs
 bfe.gitolite_agent_descriptionName=0
+bfe.gitolite_agent_descriptions=1
 
 # fields
 bfe.gitolite_agent_args_= # Command line arguments
 
 bfe.gitolite_agent.init(){
     bfe.gitolite_agent_args_=$1
-
     bfe.gitolite_agent.descriptionName = $2
+    bfe.gitolite_agent.descriptions = $3
     bfe.gitolite_agent=true
 }
 
 bfe.gitolite_agent.descriptionName() { bfe.system.utils.propertyAccessor bfe.gitolite_agent_properties $1 $2
+}
+bfe.gitolite_agent.descriptions() { bfe.system.utils.propertyAccessor bfe.gitolite_agent_properties $1 $2
 }
 
 bfe.gitolite_agent.stage()
@@ -88,126 +91,151 @@ bfe.gitolite_agent.stage()
         fi
     done
 
-    echo "gitolie_agent"
-    echo "include_repositories [${include_repositories[@]}]"
-    echo "exclude_repositories [${exclude_repositories[@]}]"
-    echo "exclude_exposed_repositories [${exclude_exposed_repositories}]"
-
-
-    # TODO ANFO
     # Stage the selected repositories.
-    # local destination_dir="${work_dir}/${stage_sub_dir}/${description_name}"
-    # run "${RM_CMD} -rf ${destination_dir}"
-    # run "${MKDIR_CMD} -p ${destination_dir}"
-    # for repo in ${repositories[@]};
-    # do
-    #     local include=false
-    #     local exclude=false
-    #
-    #     if [ ${#include_repositories[@]} -gt 0 ]
-    #     then
-    #         if [ $(bfe.system.utils.starts_with_any_of "${include_repositories[@]}" "${repo}") == "y" ]
-    #         then
-    #             local include=true
-    #         else
-    #             local exclude=true
-    #         fi
-    #     fi
-    #     if [ $(bfe.system.starts_with_any_of "${exclude_repositories[@]}" "${repo}") == "y" ]
-    #     then
-    #         local exclude=true
-    #     fi
-    #     if [ "${include_exposed_repositories}" = true ]
-    #     then
-    #         if [ $(bfe.gitolite_agent.is_exposed_gitolite_repo "${ssh_server}" "${ssh_port}" "${repo}") == "y" ] # TODO ANFO
-    #         then
-    #             local include=true
-    #         fi
-    #     fi
-    #
-    #     if [ "${include}" = true ] || [ "${include}" = false -a "${exclude}" = false -a "${include_exposed_repositories}" = false ]
-    #     then
-    #         local url="ssh://${ssh_user_id}@${ssh_server}:${ssh_port}/${repo%%.git}.git"
-    #         do_git_clone "${url}" "${DEST}" # TODO ANFO
-    #     fi
-    # done
+    local destination_dir="${work_dir}/${stage_sub_dir}/${description_name}"
+    bfe.system.utils.run "${RM_CMD} -rf ${destination_dir}"
+    bfe.system.utils.run "${MKDIR_CMD} -p ${destination_dir}"
+    for repo in ${repositories[@]};
+    do
+        local include=false
+        local exclude=false
+
+        if [ ${#include_repositories[@]} -gt 0 ]
+        then
+            if [ $(bfe.system.utils.starts_with_any_of "${include_repositories[@]}" "${repo}") == "y" ]
+            then
+                local include=true
+            else
+                local exclude=true
+            fi
+        fi
+        if [ $(bfe.system.utils.starts_with_any_of "${exclude_repositories[@]}" "${repo}") == "y" ]
+        then
+            local exclude=true
+        fi
+        if [ "${include_exposed_repositories}" = true ]
+        then
+            if [ $(bfe.gitolite_agent.is_exposed_gitolite_repo "${ssh_server}" "${ssh_port}" "${repo}" "${descriptions}") == "y" ]
+            then
+                local include=true
+            fi
+        fi
+
+        if [ "${include}" = true ] || [ "${include}" = false -a "${exclude}" = false -a "${include_exposed_repositories}" = false ]
+        then
+            local url="ssh://${ssh_user_id}@${ssh_server}:${ssh_port}/${repo%%.git}.git"
+            bfe.gitolite_agent.do_git_clone "${url}" "${destination_dir}"
+        fi
+    done
 }
 
-# TODO ANFO Need to iterate over all the backup descriptions, so needs access to the descriptions...
-# bfe.gitolite_agent.is_exposed_gitolite_repo()
-# {
-#     local ssh_server=$1
-#     local ssh_port=$2
-#     local repository=$3
-#     local include_repositories=()
-#
-#     for group in ${read_backup_description_NAMES[@]} # List of description names...
-#     do
-#         backup_type_ok=false
-#         ssh_server_ok=false
-#         ssh_server_port_ok=false
-#
-#         # Check the properties of the backup group
-#         properties_array_name=read_backup_description_${group}_PROPERTIES[@]
-#         eval "properties_array_indexes=\${!${properties_array_name}}"
-#
-#         # ...TYPE
-#         if [ $(contains ${properties_array_indexes[@]} "TYPE") == "y" ]
-#         then
-#             property_name=read_backup_description_${group}_PROPERTIES[TYPE]
-#             eval "property_value=\${${property_name}}"
-#             if [ "${property_value}" = "gitolite" ]
-#             then
-#                 backup_type_ok=true
-#             fi
-#         fi
-#         # ...SSH_SERVER
-#         if [ $(contains ${properties_array_indexes[@]} "SSH_SERVER") == "y" ]
-#         then
-#             property_name=read_backup_description_${group}_PROPERTIES[SSH_SERVER]
-#             eval "property_value=\${${property_name}}"
-#             if [ "${property_value}" = "${ssh_server}" ]
-#             then
-#                 ssh_server_ok=true
-#             fi
-#         fi
-#         # ...SSH_PORT
-#         if [ $(contains ${properties_array_indexes[@]} "SSH_PORT") == "y" ]
-#         then
-#             property_name=read_backup_description_${group}_PROPERTIES[SSH_PORT]
-#             eval "property_value=\${${property_name}}"
-#             if [ "${property_value}" == "${ssh_port}" ]
-#             then
-#                 ssh_server_port_ok=true
-#             fi
-#         fi
-#
-#         if [ "${backup_type_ok}" = true -a "${ssh_server_ok}" = true -a "${ssh_server_port_ok}" = true ]
-#         then
-#             data_array_name=read_backup_description_${group}_DATA[@]
-#             eval "data_array_indexes=\${!${data_array_name}}"
-#             for index in ${data_array_indexes}
-#             do
-#                 data_name=read_backup_description_${group}_DATA[${index}]
-#                 eval "data_value=\${${data_name}}"
-#
-#                 action=$(${ECHO_CMD} "${data_value}" | ${CUT_CMD} -c 1)
-#                 data=$(${ECHO_CMD} "${data_value}" | ${CUT_CMD} -c 2-)
-#                 if [ "${action}" = "+" ]
-#                 then
-#                     include_repositories=("${include_repositories[@]}" "${data}")
-#                 fi
-#             done
-#         fi
-#     done
-#
-#     if [ $(starts_with_any_of "${include_repositories[@]}" "${repository}") == "y" ]
-#     then
-#         ${ECHO_CMD} "n"
-#         return 0
-#     fi
-#
-#     # This repository does not seem to be covered by any backup description.
-#     ${ECHO_CMD} "y"
-#     return 1
-# }
+bfe.gitolite_agent.do_git_clone()
+{
+    local url=$1
+    local destination_dir=$2
+
+    # Determine the name of the repository
+    local repo_name=${url##file://*/}
+    local repo_name=${repo_name##http://*/}
+    local repo_name=${repo_name##https://*/}
+    local repo_name=${repo_name##ssh://*/}
+    local repo_name=${repo_name%%.git}
+    if [ -z "${repo_name}" ]
+    then
+        bfe.system.log.error "Unable to establish the repository name from url \"${url}\""
+    fi
+
+    # Show clone details.
+    bfe.system.log.info ",--[ ${repo_name} ]"
+    bfe.system.log.info "| URL : ${url}"
+    bfe.system.log.info "| Folder : ${destination_dir}/${repo_name}"
+    bfe.system.log.info "\`--"
+
+    # Before we begin, ensure we are in the correct directory and that the git
+    # clone directory doesn't already exist.
+    bfe.system.utils.run "${MKDIR_CMD} -p ${destination_dir}"
+    bfe.system.utils.run "pushd ${destination_dir}"
+    bfe.system.utils.run "${RM_CMD} -rf \"./${repo_name}\""
+
+    # Clone the repos and go into the folder
+    bfe.system.utils.run "${GIT_CMD} clone ${url} ${repo_name}"
+    bfe.system.utils.run "cd ${repo_name}"
+
+    # Pull all branches
+    bfe.system.utils.run "${GIT_CMD} branch -r | ${GREP_CMD} -v HEAD | ${GREP_CMD} -v master | while read branch; do ${GIT_CMD} branch --track \${branch#*/} \$branch; done"
+
+    # Pull all remote data and tags
+    bfe.system.utils.run "${GIT_CMD} fetch --all"
+    bfe.system.utils.run "${GIT_CMD} fetch --tags"
+    bfe.system.utils.run_noerror "${GIT_CMD} pull --all" # This can fail if an empty repository is cloned.
+    bfe.system.utils.run "${GIT_CMD} gc" # Cleanup unnecessary files and optimize the local repository
+    bfe.system.utils.run "${GIT_CMD} fsck --full" # Verify clone
+
+    # Restore the original working directory
+    bfe.system.utils.run "popd"
+}
+
+bfe.gitolite_agent.is_exposed_gitolite_repo()
+{
+    local ssh_server=$1
+    local ssh_port=$2
+    local repository=$3
+    local descriptions=$4
+    local include_repositories=()
+
+    # search backup descriptions for "exposed" repositories
+    local num_backup_descriptions=`descriptions.names count`
+    if [ "${num_backup_descriptions}" -gt 0 ]
+    then
+        local e="declare -a description_names=`descriptions.names [@]`"
+        eval "${e}"
+        # TODO This loop isn't very efficient as it creates each backup
+        # description in turn to scan its data.  Consider a better approach
+        # that uses a helper method from the descriptions object
+        for dn in ${description_names[@]}
+        do
+            local type_ok=false
+            local ssh_server_ok=false
+            local ssh_server_port_ok=false
+
+            descriptions.getBackupDescription d "${dn}"
+            if [ "`d.type`" == "gitolite" ]
+            then
+                local type_ok=true
+            fi
+            if [ -n "`d.sshServer`" ]
+            then
+                local ssh_server_ok=true
+            fi
+            if [ -n "`d.sshPort`" ]
+            then
+                local ssh_server_port_ok=true
+            fi
+
+            if [ "${type_ok}" = true -a "${ssh_server_ok}" = true -a "${ssh_server_port_ok}" = true ]
+            then
+                local e="declare -a data_array=`d.data`"
+                eval "$e"
+                for data in ${data_array[@]}
+                do
+                    local action=$(${ECHO_CMD} "${data}" | ${CUT_CMD} -c 1)
+                    local data=$(${ECHO_CMD} "${data}" | ${CUT_CMD} -c 2-)
+                    if [ "${action}" = "+" ]
+                    then
+                        local include_repositories=("${include_repositories[@]}" "${data}")
+                    fi
+                done
+            fi
+        done
+    fi
+
+    if [ $(bfe.system.utils.starts_with_any_of "${include_repositories[@]}" "${repository}") == "y" ]
+    then
+        ${ECHO_CMD} "n"
+        return 0
+    fi
+
+    # This repository does not seem to be covered by any backup description.
+    ${ECHO_CMD} "y"
+    return 1
+}

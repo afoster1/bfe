@@ -5,10 +5,12 @@ bfe.descriptions_properties=()
 
 # properties IDs
 bfe.descriptions_filename=0
+bfe.descriptions_names=array1  # Names of backups contained in the description file
+
+bfe.descriptions_namesArray=()
 
 # fields
 bfe.descriptions_args_= # Command line arguments
-bfe.descriptions_backupDescriptionNames_=  # Names of backups contained in the description file
 
 bfe.descriptions.init(){
     bfe.descriptions_args_=$1
@@ -18,13 +20,15 @@ bfe.descriptions.init(){
 
 bfe.descriptions.filename() { bfe.system.utils.propertyAccessor bfe.descriptions_properties $1 $2
 }
+bfe.descriptions.names() { bfe.system.utils.propertyAccessor bfe.descriptions_properties $1 $2
+}
 
 bfe.descriptions.load()
 {
     local filename=`bfe.descriptions.filename`
 
-    unset bfe.descriptions_backupDescriptionNames_
-    declare -g -a bfe.descriptions_backupDescriptionNames_
+    unset bfe.descriptions_namesArray
+    declare -g -a bfe.descriptions_namesArray
 
     if [ -z "${filename}" ]
     then
@@ -63,7 +67,7 @@ bfe.descriptions.load()
                                 new_property_block=false
                                 unset bfe.descriptions_backupDescriptionProperties${property_value}_
                                 declare -g -A bfe.descriptions_backupDescriptionProperties${property_value}_ # Associative array
-                                bfe.descriptions_backupDescriptionNames_=("${bfe.descriptions_backupDescriptionNames_[@]}" "${property_value}")
+                                bfe.descriptions_namesArray=("${bfe.descriptions_namesArray[@]}" "${property_value}")
                                 name=${property_value}
                             else
                                 name=
@@ -101,7 +105,7 @@ bfe.descriptions.getBackupDescription()
     object_name=$1
     name=$2
 
-    if [ $(bfe.system.utils.contains "${bfe.descriptions_backupDescriptionNames_[@]}" "${name}") == "n" ]
+    if [ $(bfe.system.utils.contains "${bfe.descriptions_namesArray[@]}" "${name}") == "n" ]
     then
         bfe.system.log.error "Backup description [${name}] does not exist."
     else

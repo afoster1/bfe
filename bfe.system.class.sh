@@ -392,6 +392,31 @@ bfe.system.utils.run()
     fi
 }
 
+# TODO run_noerror() and run() should be rolled into one as the functionality is so similar
+bfe.system.utils.run_noerror()
+{
+    local cmd=`${ECHO_CMD} "$@" | ${SED_CMD} -r 's/^RESTIC_PASSWORD=[^ ]* /RESTIC_PASSWORD=**** /g'`
+    local cmd=`${ECHO_CMD} "${cmd}" | ${SED_CMD} -r 's/^PASSPHRASE=[^ ]* /PASSPHRASE=**** /g'`
+    local cmd=`${ECHO_CMD} "${cmd}" | ${SED_CMD} -r 's/smtp-auth-password=[^ ]* /smtp-auth-password=**** /g'`
+
+    bfe.system.log.cmd "${cmd}"
+
+    if ! `${bfe_system_args_}.dryRun`
+    then
+        if `${bfe_system_args_}.useLog`
+        then
+            eval "$@" >> ${LOG_FILENAME}.log 2>> ${LOG_FILENAME}.err
+        else
+            eval "$@"
+        fi
+
+        if [ $? -ne 0 ]
+        then
+            bfe.system.log.info "Command [${cmd}] returned [$?]."
+        fi
+    fi
+}
+
 bfe.system.utils.propertyAccessor()
 {
     local properties="$1"

@@ -2,7 +2,7 @@
 
 # Fake OO convention inspired by:
 #    * http://hipersayanx.blogspot.com/2012/12/object-oriented-programming-in-bash.html?m=1
-#    * https://stackoverflow.com/a/40981277 
+#    * https://stackoverflow.com/a/40981277
 
 . bfe.os.commands.class.sh
 . bfe.system.class.sh
@@ -49,6 +49,7 @@ bfe.gitolite_agent(){
     local obj_name=$1
     local args=$2
     local descriptionName=$3
+    local descriptions=$4
     . <(sed "s/bfe.gitolite_agent/${obj_name}/g" bfe.gitolite_agent.class.sh)
-    ${obj_name}.init ${args} ${descriptionName}
+    ${obj_name}.init ${args} ${descriptionName} ${descriptions}
 }
