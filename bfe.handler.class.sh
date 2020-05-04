@@ -19,7 +19,7 @@ bfe.handler.process()
     descriptions.getBackupDescription description ${description_name}
     local type=`description.type`
 
-    # TODO Handle other agents: filesystem_rsync, gitolite, gitolite_direct
+    # TODO Handle other agents: filesystem_rsync, gitolite_direct
     # Instantiate the specific bfe.handler
     unset agent
     case ${type} in
@@ -31,6 +31,9 @@ bfe.handler.process()
             bfe.gitolite_agent agent ${bfe.handler_args_} description descriptions
             ;;
     esac
+
+    # TODO Ensure media is mounted/dismounted before and after the action if it
+    # isn't already
 
     # If the bfe.handler has been created then process the backup.
     if [ ! -z ${agent+x} ]
