@@ -18,21 +18,16 @@ bfe.descriptions descriptions args
 descriptions.load
 
 # Print each backup description (aka. group)
-numGroups=`args.backupGroups count`
-if [ "${numGroups}" -gt 0 ]
+num_descriptions=`args.backupGroups count`
+if [ "${num_descriptions}" -gt 0 ]
 then
     # Construct a backup handler
     bfe.handler handler args descriptions
 
-    # Then get a list of backup descriptions first...
-    a=()
-    for((i=0; i < ${numGroups}; i++))
-    {
-        a=("${a[@]}" "`args.backupGroups [${i}]`")
-    }
-    # ...then process them separately
-    for n in ${a[@]}
+    e="declare -a description_names=`args.backupGroups`"
+    eval "$e"
+    for name in ${description_names[@]}
     do
-        handler.process "${n}"
+        handler.process "${name}"
     done
 fi
