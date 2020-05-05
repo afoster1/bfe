@@ -6,6 +6,8 @@
 
 . bfe.os.commands.class.sh
 . bfe.system.class.sh
+. bfe.toolbox.gitolite.sh
+. bfe.toolbox.git.sh
 
 bfe.arguments()
 {
