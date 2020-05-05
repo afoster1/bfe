@@ -44,7 +44,7 @@ bfe.gitolite_agent.stage()
     # TODO ANFO If this is for local media, the destination would be different.
     local destination_dir="${work_dir}/${stage_sub_dir}/${description_name}"
 
-    bfe.toolbox.gitolite.clone "${description_object_name}" "${descriptions}" "${destination_dir}" 
+    bfe.toolbox.gitolite.clone "${description_object_name}" "${descriptions}" "${destination_dir}"
 }
 
 bfe.gitolite_agent.backup()

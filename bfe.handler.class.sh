@@ -30,6 +30,10 @@ bfe.handler.process()
         gitolite)
             bfe.gitolite_agent agent ${bfe.handler_args_} description descriptions
             ;;
+
+        gitolite_direct)
+            bfe.gitolite_direct_agent agent ${bfe.handler_args_} description descriptions
+            ;;
     esac
 
     # TODO Ensure media is mounted/dismounted before and after the action if it

@@ -10,7 +10,6 @@ bfe.toolbox.gitolite.clone()
     local ssh_user_id=`${description_object_name}.sshUserId`
     local ssh_server=`${description_object_name}.sshServer`
     local ssh_port=`${description_object_name}.sshPort`
-    local descriptions=`bfe.gitolite_agent.descriptions`
 
     # Validate the parameters
     if [ -z "${ssh_user_id}" ]
