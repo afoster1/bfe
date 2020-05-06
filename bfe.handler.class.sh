@@ -16,23 +16,23 @@ bfe.handler.process()
 
     ${ECHO_CMD} "Processing backup description: ${description_name}"
 
-    descriptions.getBackupDescription description ${description_name}
-    local type=`description.type`
+    descriptions.getBackupDescription backup_description "${description_name}"
+    local type=`backup_description.type`
 
     # TODO Handle other agents: filesystem_rsync, gitolite_direct
     # Instantiate the specific bfe.handler
     unset agent
     case ${type} in
         filesystem_restic)
-            bfe.restic_agent agent ${bfe.handler_args_} description
+            bfe.restic_agent agent ${bfe.handler_args_} backup_description
             ;;
 
         gitolite)
-            bfe.gitolite_agent agent ${bfe.handler_args_} description descriptions
+            bfe.gitolite_agent agent ${bfe.handler_args_} backup_description descriptions
             ;;
 
         gitolite_direct)
-            bfe.gitolite_direct_agent agent ${bfe.handler_args_} description descriptions
+            bfe.gitolite_direct_agent agent ${bfe.handler_args_} backup_description descriptions
             ;;
     esac
 
@@ -50,43 +50,43 @@ bfe.handler.process()
 
             case ${action} in
                 default)
-                    bfe.handler.doStage description agent
-                    bfe.handler.doBackup description agent
-                    bfe.handler.doRestore description agent
-                    bfe.handler.doVerify description agent
-                    bfe.handler.doCleanup description agent
+                    bfe.handler.doStage backup_description agent
+                    bfe.handler.doBackup backup_description agent
+                    bfe.handler.doRestore backup_description agent
+                    bfe.handler.doVerify backup_description agent
+                    bfe.handler.doCleanup backup_description agent
                     ;;
                 mount)
                     # The "mount" action is the same for all agents
-                    local medium_type=`description.medium`
-                    local medium_label=`description.mediumLabel`
+                    local medium_type=`backup_description.medium`
+                    local medium_label=`backup_description.mediumLabel`
                     local medium_dir=`${bfe.handler_args_}.backupMediumDir`
                     bfe.system.utils.doMount "${description_name}"  "${medium_type}" "${medium_label}" "${medium_dir}"
                     ;;
                 unmount)
                     # The "unmount" action is the same for all agents
-                    local medium_type=`description.medium`
-                    local medium_label=`description.mediumLabel`
+                    local medium_type=`backup_description.medium`
+                    local medium_label=`backup_description.mediumLabel`
                     local medium_dir=`${bfe.handler_args_}.backupMediumDir`
                     bfe.system.utils.doUnmount "${description_name}"  "${medium_type}" "${medium_label}" "${medium_dir}"
                     ;;
                 stage)
-                    bfe.handler.doStage description agent
+                    bfe.handler.doStage backup_description agent
                     ;;
                 backup)
-                    bfe.handler.doBackup description agent
+                    bfe.handler.doBackup backup_description agent
                     ;;
                 restore)
-                    bfe.handler.doRestore description agent
+                    bfe.handler.doRestore backup_description agent
                     ;;
                 verify)
-                    bfe.handler.doVerify description agent
+                    bfe.handler.doVerify backup_description agent
                     ;;
                 cleanup)
-                    bfe.handler.doCleanup description agent
+                    bfe.handler.doCleanup backup_description agent
                     ;;
                 status)
-                    bfe.handler.doStatus description agent
+                    bfe.handler.doStatus backup_description agent
                     ;;
                 *)
                     bfe.system.log.error "Unable to process action '${action}'"
