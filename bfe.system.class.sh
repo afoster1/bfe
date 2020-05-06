@@ -488,3 +488,13 @@ bfe.system.utils.getWorkingDirectory()
 
     echo "$( cd -P "$( ${DIRNAME_CMD} "${src}" )" && pwd )"
 }
+
+bfe.system.utils.copyBFE()
+{
+    local source_dir=$1
+    local destination_dir=$2
+
+    bfe.system.utils.run "mkdir -p ${destination_dir}/bfe"
+    bfe.system.utils.run "cp -f ${source_dir}/bfe.*.sh ${destination_dir}/bfe" # TODO Make this less fragile?
+    bfe.system.utils.run "cp -f ${backup_description_filename} ${destination_dir}/bfe"
+}

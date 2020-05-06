@@ -116,10 +116,7 @@ bfe.restic_agent.backup()
     bfe.system.utils.run "cd ${source_dir}"
     bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} backup --repo ${destination_dir} backup . --verbose"
 
-    bfe.system.utils.run "cd ${orig_dir}"
-    bfe.system.utils.run "mkdir -p ${destination_dir}/bfe"
-    bfe.system.utils.run "cp -f bfe.*.sh ${destination_dir}/bfe" # TODO Make this less fragile?
-    bfe.system.utils.run "cp -f ${backup_description_filename} ${destination_dir}/bfe"
+    bfe.system.utils.copyBFE "${bfe_script_directory_}" "${destination_dir}"
 }
 
 bfe.restic_agent.restore()

@@ -56,11 +56,7 @@ bfe.gitolite_direct_agent.backup()
 
     bfe.toolbox.gitolite.clone "${description_object_name}" "${descriptions}" "${destination_dir}"
 
-    # TODO This functionality is duplicated in the restic_agent.
-    bfe.system.utils.run "cd ${orig_dir}"
-    bfe.system.utils.run "mkdir -p ${destination_dir}/bfe"
-    bfe.system.utils.run "cp -f bfe.*.sh ${destination_dir}/bfe" # TODO Make this less fragile?
-    bfe.system.utils.run "cp -f ${backup_description_filename} ${destination_dir}/bfe"
+    bfe.system.utils.copyBFE "${bfe_script_directory_}" "${destination_dir}"
 }
 
 bfe.gitolite_direct_agent.restore()
