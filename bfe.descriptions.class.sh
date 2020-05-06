@@ -41,49 +41,48 @@ bfe.descriptions.load()
             ${ECHO_CMD} "Reading backup description filename [${filename}]."
 
             # Prepare a dictionary in which to store discovered propeties...
-            new_property_block=true
-            new_data_block=true
-            name=
+            local new_property_block=true
+            local new_data_block=true
+            local name=
 
             # Read the description file
             while IFS= read line
             do
-                action=$(${ECHO_CMD} "$line" | ${CUT_CMD} -c 1)
-                value=$(${ECHO_CMD} "$line" | ${CUT_CMD} -c 2-)
+                local action=$(${ECHO_CMD} "$line" | ${CUT_CMD} -c 1)
+                local value=$(${ECHO_CMD} "$line" | ${CUT_CMD} -c 2-)
                 if [ ! "${action}" = "#" ]
                 then
                     if [ "${action}" = ":" ]
                     then
-                        new_data_block=true
-
-                        property_name=
-                        property_value=
+                        local new_data_block=true
+                        local property_name=
+                        local property_value=
                         IFS='=' read -r property_name property_value <<< "${value}"
 
                         if [ "${new_property_block}" = true ]
                         then
                             if [ "${property_name}" = "NAME" ]
                             then
-                                new_property_block=false
+                                local new_property_block=false
                                 unset bfe.descriptions_backupDescriptionProperties${property_value}_
                                 declare -g -A bfe.descriptions_backupDescriptionProperties${property_value}_ # Associative array
                                 bfe.descriptions_namesArray=("${bfe.descriptions_namesArray[@]}" "${property_value}")
-                                name=${property_value}
+                                local name=${property_value}
                             else
-                                name=
+                                local name=
                                 bfe.system.log.error "Backup description does not start with NAME property."
                             fi
                         else
                             eval "bfe.descriptions_backupDescriptionProperties${name}_+=([${property_name}]=${property_value})"
                         fi
                     else
-                        new_property_block=true
+                        local new_property_block=true
 
                         if [ "${new_data_block}" = true ]
                         then
                             if [ -n "${name}" ]
                             then
-                                new_data_block=false
+                                local new_data_block=false
                                 unset bfe.descriptions_backupDescriptionData${name}_
                                 declare -g -a bfe.descriptions_backupDescriptionData${name}_ # Indexed array
                             else
@@ -93,7 +92,7 @@ bfe.descriptions.load()
                         eval "bfe.descriptions_backupDescriptionData${name}_+=('${line}')"
                     fi
                 else
-                    new_property_block=true
+                    local new_property_block=true
                 fi
             done < ${filename}
         fi
@@ -102,8 +101,8 @@ bfe.descriptions.load()
 
 bfe.descriptions.getBackupDescription()
 {
-    object_name=$1
-    name=$2
+    local object_name=$1
+    local name=$2
 
     if [ $(bfe.system.utils.contains "${bfe.descriptions_namesArray[@]}" "${name}") == "n" ]
     then
@@ -112,7 +111,7 @@ bfe.descriptions.getBackupDescription()
         bfe.description ${object_name} ${bfe.descriptions_args_} ${name}
 
         # Read the details
-        array_name=bfe.descriptions_backupDescriptionProperties`${object_name}.name`_
+        local array_name=bfe.descriptions_backupDescriptionProperties`${object_name}.name`_
         eval "array_keys=\${!${array_name}[@]}"
         for i in ${array_keys}
         do
@@ -160,7 +159,7 @@ bfe.descriptions.getBackupDescription()
         done
 
         # Read the data
-        data_name=bfe.descriptions_backupDescriptionData`${object_name}.name`_
+        local data_name=bfe.descriptions_backupDescriptionData`${object_name}.name`_
         eval "data_indexes=\${!${data_name}[@]}"
         local a=()
         for index in ${data_indexes}
@@ -180,7 +179,7 @@ bfe.descriptions.getBackupDescription()
 
 bfe.descriptions.setDefaults()
 {
-    object_name=$1
+    local object_name=$1
 
     if [ -z "`${object_name}.keepFull`" ]
     then

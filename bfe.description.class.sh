@@ -21,7 +21,6 @@ bfe.description_args_= # Command line arguments
 
 bfe.description.init(){
     bfe.description_args_=$1
-
     bfe.description.name = $2
 }
 
