@@ -270,7 +270,7 @@ bfe.arguments.setDefaults()
     then
         if [ -z "`bfe.arguments.workDir`" ]
         then
-            bfe.arguments.configFilename = "backup.cfg"
+            bfe.arguments.configFilename = "${bfe_script_directory_}/backup.cfg"
         else
             bfe.arguments.configFilename = "`bfe.arguments.workDir`/backup.cfg"
         fi

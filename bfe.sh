@@ -1,8 +1,28 @@
 #!/bin/bash
 # Backup Front-End
 
+# Find out the scripts directory is
+bfe.getScriptDirectory()
+{
+    local src="${BASH_SOURCE[0]}"
+    local dirname_cmd=`which dirname 2> /dev/null`
+
+    # resolve $src until the file is no longer a symlink
+    while [ -h "${src}" ]
+    do
+        local dir="$( cd -P "$( ${dirname_cmd} "${src}" )" && pwd )"
+        local src="$(readlink "${src}")"
+        # if $src was a relative symlink, we need to resolve it relative to
+        # the path where the symlink file was located
+        [[ ${src} != /* ]] && src="${dir}/${src}"
+    done
+
+    echo "$( cd -P "$( ${dirname_cmd} "${src}" )" && pwd )"
+}
+bfe_script_directory_=`bfe.getScriptDirectory`
+
 # Define all the types
-. bfe.types.sh
+. "${bfe_script_directory_}/bfe.types.sh"
 
 # Read backup arguments
 bfe.arguments args
