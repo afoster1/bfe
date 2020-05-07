@@ -209,28 +209,23 @@ bfe.system.utils.mountOfflineMedia()
 {
     local label=$1
     local medium_dir=$2
+    local mount_dir="${medium_dir}/${label}"
+
+    # Ensure the mount point exists
+    if [ ! -d "${mount_dir}" ]
+    then
+         ${MKDIR_CMD} -p "${mount_dir}"
+    fi
+    if [ ! -d "${mount_dir}" ]
+    then
+        ${ECHO_CMD} "n"
+        return 0
+    fi
 
     # Discover the device id from the label.
     local device_id=$( ${BLKID_CMD} | ${GREP_CMD} \"${label}\" | ${CUT_CMD} -d : -f 1)
     if [ -z "${device_id}" ]
     then
-        ${ECHO_CMD} "n"
-        return 0
-    fi
-
-    # Pull in useful variables from udevadm for the device.  Quote everything just in case.
-    eval `${UDEVADM_CMD} info -q property -n ${device_id} | ${SED_CMD} 's/^/export /; s/=/="/; s/$/"/'`
-    if [ -z "${ID_FS_LABEL}" ] || [ -z "${ID_FS_TYPE}" ]
-    then
-        ${ECHO_CMD} "n"
-        return 0
-    fi
-
-    # Create the mount point then verify it exists.
-    if [ ! -d "${medium_dir}/${ID_FS_LABEL}" ]; then
-        ${MKDIR_CMD} -p "${medium_dir}/${ID_FS_LABEL}"
-    fi
-    if [ ! -d "${medium_dir}/${ID_FS_LABEL}" ]; then
         ${ECHO_CMD} "n"
         return 0
     fi
@@ -245,20 +240,13 @@ bfe.system.utils.mountOfflineMedia()
     # (listed in /etc/passwd).  You may also want "gid=1000" and/or "umask=022", eg:
     #      mount -t auto -o uid=1000,gid=1000 [...]
     #
-    case "$ID_FS_TYPE" in
-
-        vfat) ${MOUNT_CMD} -t vfat -o sync,noatime,uid=1000,gid=1000 ${device_id} "/${medium_dir}/${ID_FS_LABEL}"
-        ;;
-
-        # I like the locale setting for ntfs
-        ntfs) ${MOUNT_CMD} -t auto -o sync,noatime,uid=1000,gid=1000,locale=en_US.UTF-8 ${device_id} "/${medium_dir}/${ID_FS_LABEL}"
-        ;;
-
-        # ext2/3/4 don't like uid option
-        ext*) ${MOUNT_CMD} -t auto -o sync,noatime ${device_id} "/${medium_dir}/${ID_FS_LABEL}"
-        ;;
-
-    esac
+    # Examples:
+    #     ${MOUNT_CMD} -t vfat -o sync,noatime,uid=1000,gid=1000 ${device_id} "/${medium_dir}/${label}"
+    #     # A good locale setting for ntfs
+    #     ${MOUNT_CMD} -t auto -o sync,noatime,uid=1000,gid=1000,locale=en_US.UTF-8 ${device_id} "/${medium_dir}/${label}"
+    #     # ext2/3/4 don't like uid option
+    #     ${MOUNT_CMD} -t auto -o sync,noatime ${device_id} "/${medium_dir}/${label}"
+    ${MOUNT_CMD} -t vfat -o sync,noatime,uid=1000,gid=1000 ${device_id} "/${medium_dir}/${label}"
 
     # Check the device is mounted
     local device_is_mounted=`${GREP_CMD} ${device_id} /etc/mtab`
@@ -285,14 +273,6 @@ bfe.system.utils.unmountOfflineMedia()
         return 0
     fi
 
-    # Pull in useful variables from udevadm for the device.  Quote everything just in case.
-    eval `${UDEVADM_CMD} info -q property -n ${device_id} | ${SED_CMD} 's/^/export /; s/=/="/; s/$/"/'`
-    if [ -z "${ID_FS_LABEL}" ] || [ -z "${ID_FS_TYPE}" ]
-    then
-        ${ECHO_CMD} "n"
-        return 0
-    fi
-
     # Check the device is mounted
     local device_is_mounted=`${GREP_CMD} ${device_id} /etc/mtab`
     if [ -z "${device_is_mounted}" ]
@@ -303,13 +283,6 @@ bfe.system.utils.unmountOfflineMedia()
 
     # Unmount the device
     ${UMOUNT_CMD} -l ${device_id}
-
-    # Remove the directory then verify it does not exist
-    ${RMDIR_CMD} "${medium_dir}/${ID_FS_LABEL}"
-    if [ -d "${medium_dir}/${ID_FS_LABEL}" ]; then
-        ${ECHO_CMD} "n"
-        return 0
-    fi
 
     # Check the device is not mounted
     local device_is_mounted=`${GREP_CMD} ${device_id} /etc/mtab`

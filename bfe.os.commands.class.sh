@@ -9,7 +9,6 @@ FIND_CMD=`which find 2> /dev/null`
 RESTIC_CMD=`which restic 2> /dev/null`
 HOSTNAME_CMD=`which hostname 2> /dev/null`
 BLKID_CMD=`which blkid 2> /dev/null`
-UDEVADM_CMD=`which udevadm 2> /dev/null`
 SED_CMD=`which sed 2> /dev/null`
 MOUNT_CMD=`which mount 2> /dev/null`
 UMOUNT_CMD=`which umount 2> /dev/null`
