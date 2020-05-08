@@ -36,9 +36,6 @@ bfe.handler.process()
             ;;
     esac
 
-    # TODO Ensure media is mounted/dismounted before and after the action if it
-    # isn't already
-
     # If the bfe.handler has been created then process the backup.
     if [ ! -z ${agent+x} ]
     then
@@ -47,6 +44,13 @@ bfe.handler.process()
         for action in ${actions[@]}
         do
             ${ECHO_CMD} "-> Action: ${action}"
+
+            # Check the medium is mounted
+            local medium_type=`backup_description.medium`
+            local medium_label=`backup_description.mediumLabel`
+            local medium_dir=`${bfe.handler_args_}.backupMediumDir`
+            bfe.handler.checkAndMount "${action}" "${description_name}" "${medium_type}" "${medium_label}" "${medium_dir}"
+            local script_has_mounted_medium=$?
 
             case ${action} in
                 default)
@@ -58,17 +62,11 @@ bfe.handler.process()
                     ;;
                 mount)
                     # The "mount" action is the same for all agents
-                    local medium_type=`backup_description.medium`
-                    local medium_label=`backup_description.mediumLabel`
-                    local medium_dir=`${bfe.handler_args_}.backupMediumDir`
-                    bfe.system.utils.doMount "${description_name}"  "${medium_type}" "${medium_label}" "${medium_dir}"
+                    bfe.system.utils.mountMedium "${description_name}" "${medium_type}" "${medium_label}" "${medium_dir}"
                     ;;
                 unmount)
                     # The "unmount" action is the same for all agents
-                    local medium_type=`backup_description.medium`
-                    local medium_label=`backup_description.mediumLabel`
-                    local medium_dir=`${bfe.handler_args_}.backupMediumDir`
-                    bfe.system.utils.doUnmount "${description_name}"  "${medium_type}" "${medium_label}" "${medium_dir}"
+                    bfe.system.utils.unmountMedium "${description_name}" "${medium_type}" "${medium_label}" "${medium_dir}"
                     ;;
                 stage)
                     bfe.handler.doStage backup_description agent
@@ -92,10 +90,34 @@ bfe.handler.process()
                     bfe.system.log.error "Unable to process action '${action}'"
                     ;;
             esac
+
+            if [ "${script_has_mounted_medium}" = 1 ]
+            then
+                bfe.system.utils.unmountMedium "${description_name}" "${medium_type}" "${medium_label}" "${medium_dir}"
+            fi
         done
     else
         bfe.system.log.error "Unable to process backup type '${type}'"
     fi
+}
+
+bfe.handler.checkAndMount()
+{
+    # Note: Returns 1 if this function has mounted the medium, 0 otherwise.
+    local action=$1
+    local description_name=$2
+    local medium_type=$3
+    local medium_label=$4
+    local medium_dir=$5
+    local result=0
+
+    if [ ! "${action}" = "mount" ]
+    then
+        bfe.system.utils.mountMedium "${description_name}" "${medium_type}" "${medium_label}" "${medium_dir}"
+        local result=$?
+    fi
+
+    return ${result}
 }
 
 bfe.handler.doStage()

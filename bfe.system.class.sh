@@ -296,8 +296,9 @@ bfe.system.utils.unmountOfflineMedia()
     return 1
 }
 
-bfe.system.utils.doMount()
+bfe.system.utils.mountMedium()
 {
+    # Note: Returns 1 if this function has mounted the medium, 0 otherwise.
     local description_name=$1
     local medium_type=$2
     local medium_label=$3
@@ -316,13 +317,16 @@ bfe.system.utils.doMount()
                     bfe.system.log.error "Backup description [${description_name}] requires backup medium labelled [${medium_label}] which is not mounted."
                 else
                     bfe.system.log.info "Backup medium [${medium_label}] mounted."
+                    return 1
                 fi
             fi
         fi
     fi
+
+    return 0
 }
 
-bfe.system.utils.doUnmount()
+bfe.system.utils.unmountMedium()
 {
     local description_name=$1
     local medium_type=$2
