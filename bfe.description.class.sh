@@ -45,22 +45,24 @@ bfe.description.data() { bfe.system.utils.propertyAccessor bfe.description_prope
 
 bfe.description.print()
 {
-    bfe.system.stdout.printMessageAndValue "bfe.description: " bfe.description.name
-    bfe.system.stdout.printMessageAndValue "- Type: " bfe.description.type
-    bfe.system.stdout.printMessageAndValue "- Medium: " bfe.description.medium
-    bfe.system.stdout.printMessageAndValue "- Medium Label: " bfe.description.mediumLabel
-    bfe.system.stdout.printMessageAndValue "- Keep Full: " bfe.description.keepFull
-    bfe.system.stdout.printMessageAndValue "- SSH Server: " bfe.description.sshServer
-    bfe.system.stdout.printMessageAndValue "- SSH Port: " bfe.description.sshPort
-    bfe.system.stdout.printMessageAndValue "- SSH User ID: " bfe.description.sshUserId
-    count=`bfe.description.data count`
+    bfe.system.log.info ",--[ `bfe.description.name` ]"
+    bfe.system.log.info "|>Properties"
+    bfe.system.log.info "| Type: `bfe.description.type`"
+    bfe.system.log.info "| Medium: `bfe.description.medium`"
+    bfe.system.log.info "| Medium Label: `bfe.description.mediumLabel`"
+    bfe.system.log.info "| Keep Full: `bfe.description.keepFull`"
+    bfe.system.log.info "| SSH Server Server: `bfe.description.sshServer`"
+    bfe.system.log.info "| SSH Server Port: `bfe.description.sshPort`"
+    bfe.system.log.info "| SSH Server ID: `bfe.description.sshUserId`"
+    local count=`bfe.description.data count`
     if [ "${count}" -gt 0 ]
     then
-        echo "- Data:"
+        bfe.system.log.info "|>Data"
         for ((i=0;i < ${count};i++))
         {
-            bfe.system.stdout.printMessageAndValue "    " bfe.description.data [$i]
+            bfe.system.log.info "| `bfe.description.data [$i]`"
         }
     fi
+    bfe.system.log.info "\`--"
 }
 

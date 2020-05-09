@@ -17,6 +17,7 @@ bfe.handler.process()
     ${ECHO_CMD} "Processing backup description: ${description_name}"
 
     descriptions.getBackupDescription backup_description "${description_name}"
+    backup_description.print
     local type=`backup_description.type`
 
     # TODO Handle other agents: filesystem_rsync, gitolite_direct
