@@ -3,10 +3,12 @@
 # fields
 bfe.handler_args_= # Command line arguments
 bfe.handler_descriptions_= # Backup descriptions
+bfe.handler_notifier_= # Notifier to inform of status messages
 
 bfe.handler.init(){
     bfe.handler_args_=$1
     bfe.handler_descriptions_=$2
+    bfe.handler_notifier_=$3
 }
 
 bfe.handler.process()
@@ -45,6 +47,7 @@ bfe.handler.process()
         for action in ${actions[@]}
         do
             ${ECHO_CMD} "-> Action: ${action}"
+            ${bfe.handler_notifier_}.append "Description:${description_name}, Action:${action}"
 
             # Check the medium is mounted
             local medium_type=`backup_description.medium`

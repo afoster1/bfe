@@ -29,8 +29,11 @@ bfe.arguments args
 args.parse "$@"
 args.print
 
+# Create a notifier
+bfe.notifier notifier args
+
 # Initialise system
-bfe.system.init args
+bfe.system.init args notifier
 echo
 
 # Create a backup descriptions object
@@ -41,8 +44,10 @@ descriptions.load
 num_descriptions=`args.backupGroups count`
 if [ "${num_descriptions}" -gt 0 ]
 then
+    notifier.append "`args.backupName`: Started @ `${DATE_CMD}`"
+
     # Construct a backup handler
-    bfe.handler handler args descriptions
+    bfe.handler handler args descriptions notifier
 
     e="declare -a description_names=`args.backupGroups`"
     eval "$e"
@@ -50,4 +55,7 @@ then
     do
         handler.process "${name}"
     done
+
+    notifier.append "`args.backupName`: Ended @ `${DATE_CMD}`"
+    notifier.notify
 fi

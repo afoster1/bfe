@@ -35,8 +35,16 @@ bfe.handler(){
     local obj_name=$1
     local args=$2
     local descriptions=$3
+    local notifier=$4
     . <(sed "s/bfe.handler/${obj_name}/g" "${bfe_script_directory_}/bfe.handler.class.sh")
-    ${obj_name}.init ${args} ${descriptions}
+    ${obj_name}.init "${args}" "${descriptions}" "${notifier}"
+}
+
+bfe.notifier(){
+    local obj_name=$1
+    local args=$2
+    . <(sed "s/bfe.notifier/${obj_name}/g" "${bfe_script_directory_}/bfe.notifier.class.sh")
+    ${obj_name}.init "${args}"
 }
 
 bfe.restic_agent(){

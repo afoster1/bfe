@@ -17,3 +17,5 @@ HASHDEEP_CMD=`which hashdeep 2> /dev/null`
 BASENAME_CMD=`which basename 2> /dev/null`
 SSH_CMD=`which ssh 2> /dev/null`
 GIT_CMD=`which git 2> /dev/null`
+MAILX_CMD=`which mailx 2> /dev/null`
+DATE_CMD=`which date 2> /dev/null`

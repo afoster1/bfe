@@ -1,9 +1,11 @@
 # Fields
 bfe_system_args_= # Command line arguments
+bfe_system_notifier_= # Status notifier
 bfe_system_log_filename_= # The filename to be used for the log
 
 bfe.system.init() {
     bfe_system_args_=$1
+    bfe_system_notifier_=$2
 
     bfe.system.log.init
 }
@@ -122,15 +124,11 @@ bfe.system.log.error() {
         ${ECHO_CMD} "ERROR:$@" 1>&2 >> ${bfe_system_log_filename_}.err
     fi
 
-    # TODO ANFO Enable email notifications
-    #     if [ "${OK_TO_SEND_EMAIL}" = true ]
-    #     then
-    #         OK_TO_SEND_EMAIL=false
-    #         EMAIL_MSG="${EMAIL_MSG}
-    # ERROR: $@"
-    #         send_email ${EMAIL_FROM} "Re: ${HOSTNAME} :(" "${EMAIL_MSG}" true
-    #         OK_TO_SEND_EMAIL=true
-    #     fi
+    if [ "`${bfe_system_args_}.sendEmail`" = true ]
+    then
+        ${bfe_system_notifier_}.append "ERROR: $@"
+        ${bfe_system_notifier_}.notifyError
+    fi
     exit 1
 }
 
@@ -474,4 +472,40 @@ bfe.system.utils.copyBFE()
     bfe.system.utils.run "mkdir -p ${destination_dir}/bfe"
     bfe.system.utils.run "cp -f ${source_dir}/bfe.*.sh ${destination_dir}/bfe" # TODO Make this less fragile?
     bfe.system.utils.run "cp -f ${backup_description_filename} ${destination_dir}/bfe"
+}
+
+bfe.system.utils.sendEmail()
+{
+    # Note: To setup mailx to send emails via gmail some system configuration
+    # is required to install certificates.
+    # See the following link for more details:
+    # https://serverfault.com/questions/498588/smtp-gmail-com-from-bash-gives-error-in-certificate-peers-certificate-issuer
+    #
+    # Disclaimer: I haven't succeeded to get steps 4-7 working.
+    #
+    # TLDR; Use the following:
+    # 1. Choose a sub-directory to store a certificates database.
+    # 2. Create a new certificates database: certutil -N -d [directory]
+    #    Provide a password
+    # 3. This should be all that is required, since the mailx command used
+    #    below includes "-s ssl-verify=ignore".  If full verification is required,
+    #    continue to step 4.
+    # 4. Remove "-s ssl-verify=ignore" from the mailx command below.
+    # 5. Download the certificates: openssl s_client </dev/null -showcerts -connect smtp.gmail.com:465
+    # 6. Edit this file and store each certificate in its own file.
+    # 7. Import each certificate into the database: certutil -A -n "Google Internet Authority" -t "C,," -d [directory] -i [Certificate filename]
+    # 8. List the certificates database: certutil -L -d .
+    local email_to=$1
+    local email_from=`${bfe_system_args_}.emailFrom`
+    local subject=$2
+    local message=$3
+    # local add_ip_address=$4
+    local send_email=`${bfe_system_args_}.sendEmail`
+    local email_password=`${bfe_system_args_}.emailPassword`
+    local certificate_database=`${bfe_system_args_}.certificateDatabase`
+
+    if [ "${send_email}" = true -a -n "${email_from}" ]
+    then
+        bfe.system.utils.run "${ECHO_CMD} \"${message}\" | ${MAILX_CMD} -v -S smtp-use-starttls -S smtp-auth=login -S smtp=smtp://smtp.gmail.com:587 -S from=${email_from} -S smtp-auth-user=${email_from} -S smtp-auth-password=${email_password} -S ssl-verify=ignore -S nss-config-dir=${certificate_database} -s \"${subject}\" ${email_to}"
+    fi
 }
