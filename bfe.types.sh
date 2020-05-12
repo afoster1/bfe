@@ -72,3 +72,12 @@ bfe.gitolite_direct_agent(){
     . <(sed "s/bfe.gitolite_direct_agent/${obj_name}/g" "${bfe_script_directory_}/bfe.gitolite_direct_agent.class.sh")
     ${obj_name}.init ${args} ${description_name} ${descriptions}
 }
+
+bfe.git_agent(){
+    local obj_name=$1
+    local args=$2
+    local description_name=$3
+    local descriptions=$4
+    . <(sed "s/bfe.git_agent/${obj_name}/g" "${bfe_script_directory_}/bfe.git_agent.class.sh")
+    ${obj_name}.init "${args}" "${description_name}" "${descriptions}"
+}

@@ -37,6 +37,10 @@ bfe.handler.process()
         gitolite_direct)
             bfe.gitolite_direct_agent agent ${bfe.handler_args_} backup_description descriptions
             ;;
+
+        git)
+            bfe.git_agent agent ${bfe.handler_args_} backup_description descriptions
+            ;;
     esac
 
     # If the bfe.handler has been created then process the backup.

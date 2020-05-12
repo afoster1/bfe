@@ -45,3 +45,44 @@ bfe.toolbox.git.clone()
     # Restore the original working directory
     bfe.system.utils.run "popd"
 }
+
+bfe.toolbox.git.mirror()
+{
+    local url=$1
+    local dest=$2
+
+    # Determine the name of the repository
+    local repo_name=${url%%/}
+    local repo_name=${repo_name##file://*/}
+    local repo_name=${repo_name##http://*/}
+    local repo_name=${repo_name##https://*/}
+    local repo_name=${repo_name##ssh://*/}
+    local repo_name=${repo_name%%.git}
+    if [ -z "${repo_name}" ]
+    then
+        bfe.system.log.error "Unable to determine the repository name from url \"${url}\""
+    fi
+
+    # Show clone details.
+    bfe.system.log.info ",--[ ${repo_name} ]"
+    bfe.system.log.info "| URL : ${url}"
+    bfe.system.log.info "| Folder : ${dest}/${repo_name}"
+    bfe.system.log.info "\`--"
+
+    # Before we begin, ensure we are in the correct directory and that the git
+    # clone directory doesn't already exist.
+    bfe.system.utils.run "${MKDIR_CMD} -p ${dest}"
+    bfe.system.utils.run "pushd ${dest}"
+    bfe.system.utils.run "${RM_CMD} -rf \"./${repo_name}\""
+
+    # Mirror the repo
+    bfe.system.utils.run "${GIT_CMD} clone --mirror ${url} ${repo_name}"
+
+    # Cleanup
+    bfe.system.utils.run "cd ${repo_name}"
+    bfe.system.utils.run "${GIT_CMD} gc" # Cleanup unnecessary files and optimize the local repository
+    bfe.system.utils.run "${GIT_CMD} fsck --full" # Verify clone
+
+    # Restore the original working directory
+    bfe.system.utils.run "popd"
+}
