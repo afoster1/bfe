@@ -16,8 +16,6 @@ bfe.handler.process()
     local description_name=$1
     local descriptions=${bfe.handler_descriptions_}
 
-    ${ECHO_CMD} "Processing backup description: ${description_name}"
-
     descriptions.getBackupDescription backup_description "${description_name}"
     backup_description.print
     local type=`backup_description.type`
@@ -50,7 +48,6 @@ bfe.handler.process()
         eval "$e"
         for action in ${actions[@]}
         do
-            ${ECHO_CMD} "-> Action: ${action}"
             ${bfe.handler_notifier_}.append "Description:${description_name}, Action:${action}"
 
             # Check the medium is mounted
@@ -94,6 +91,8 @@ bfe.handler.process()
                 status)
                     bfe.handler.doStatus backup_description agent
                     ;;
+                show)
+                    ;;
                 *)
                     bfe.system.log.error "Unable to process action '${action}'"
                     ;;
@@ -119,7 +118,7 @@ bfe.handler.checkAndMount()
     local medium_dir=$5
     local result=0
 
-    if [ ! "${action}" = "mount" ]
+    if [ ! "${action}" = "mount" -a ! "${action}" = "show" ]
     then
         bfe.system.utils.mountMedium "${description_name}" "${medium_type}" "${medium_label}" "${medium_dir}"
         local result=$?
