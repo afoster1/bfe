@@ -8,6 +8,9 @@ bfe.system.init() {
     bfe_system_notifier_=$2
 
     bfe.system.log.init
+    bfe.toolbox.hashing.init "${bfe_system_args_}"
+    bfe.toolbox.filesystem.init "${bfe_system_args_}"
+    bfe.toolbox.restic.init "${bfe_system_args_}"
 }
 
 bfe.system.stdout.printMessageAndValue(){
@@ -468,6 +471,7 @@ bfe.system.utils.copyBFE()
 {
     local source_dir=$1
     local destination_dir=$2
+    local backup_description_filename=`${bfe_system_args_}.backupDescriptionFilename`
 
     bfe.system.utils.run "mkdir -p ${destination_dir}/bfe"
     bfe.system.utils.run "cp -f ${source_dir}/bfe.*.sh ${destination_dir}/bfe" # TODO Make this less fragile?
