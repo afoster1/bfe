@@ -51,20 +51,20 @@ bfe.notifier(){
     ${obj_name}.init "${args}"
 }
 
-bfe.restic_agent(){
+bfe.filesystem_restic_agent(){
     local obj_name=$1
     local args=$2
     local description_name=$3
-    . <(sed "s/bfe.restic_agent/${obj_name}/g" "${bfe_script_directory_}/bfe.restic_agent.class.sh")
+    . <(sed "s/bfe.filesystem_restic_agent/${obj_name}/g" "${bfe_script_directory_}/bfe.filesystem_restic_agent.class.sh")
     ${obj_name}.init ${args} ${description_name}
 }
 
-bfe.gitolite_agent(){
+bfe.gitolite_restic_agent(){
     local obj_name=$1
     local args=$2
     local description_name=$3
     local descriptions=$4
-    . <(sed "s/bfe.gitolite_agent/${obj_name}/g" "${bfe_script_directory_}/bfe.gitolite_agent.class.sh")
+    . <(sed "s/bfe.gitolite_restic_agent/${obj_name}/g" "${bfe_script_directory_}/bfe.gitolite_restic_agent.class.sh")
     ${obj_name}.init ${args} ${description_name} ${descriptions}
 }
 
@@ -77,11 +77,11 @@ bfe.gitolite_direct_agent(){
     ${obj_name}.init ${args} ${description_name} ${descriptions}
 }
 
-bfe.git_agent(){
+bfe.git_restic_agent(){
     local obj_name=$1
     local args=$2
     local description_name=$3
     local descriptions=$4
-    . <(sed "s/bfe.git_agent/${obj_name}/g" "${bfe_script_directory_}/bfe.git_agent.class.sh")
+    . <(sed "s/bfe.git_restic_agent/${obj_name}/g" "${bfe_script_directory_}/bfe.git_restic_agent.class.sh")
     ${obj_name}.init "${args}" "${description_name}" "${descriptions}"
 }

@@ -25,19 +25,19 @@ bfe.handler.process()
     unset agent
     case ${type} in
         filesystem_restic)
-            bfe.restic_agent agent ${bfe.handler_args_} backup_description
+            bfe.filesystem_restic_agent agent ${bfe.handler_args_} backup_description
             ;;
 
-        gitolite)
-            bfe.gitolite_agent agent ${bfe.handler_args_} backup_description descriptions
+        gitolite_restic)
+            bfe.gitolite_restic_agent agent ${bfe.handler_args_} backup_description descriptions
             ;;
 
         gitolite_direct)
             bfe.gitolite_direct_agent agent ${bfe.handler_args_} backup_description descriptions
             ;;
 
-        git)
-            bfe.git_agent agent ${bfe.handler_args_} backup_description descriptions
+        git_restic)
+            bfe.git_restic_agent agent ${bfe.handler_args_} backup_description descriptions
             ;;
     esac
 
