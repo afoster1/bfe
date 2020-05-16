@@ -39,6 +39,10 @@ bfe.handler.process()
         git_restic)
             bfe.git_restic_agent agent ${bfe.handler_args_} backup_description descriptions
             ;;
+
+        git_direct)
+            bfe.git_direct_agent agent ${bfe.handler_args_} backup_description descriptions
+            ;;
     esac
 
     # If the bfe.handler has been created then process the backup.

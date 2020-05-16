@@ -81,7 +81,14 @@ bfe.git_restic_agent(){
     local obj_name=$1
     local args=$2
     local description_name=$3
-    local descriptions=$4
     . <(sed "s/bfe.git_restic_agent/${obj_name}/g" "${bfe_script_directory_}/bfe.git_restic_agent.class.sh")
-    ${obj_name}.init "${args}" "${description_name}" "${descriptions}"
+    ${obj_name}.init "${args}" "${description_name}"
+}
+
+bfe.git_direct_agent(){
+    local obj_name=$1
+    local args=$2
+    local description_name=$3
+    . <(sed "s/bfe.git_direct_agent/${obj_name}/g" "${bfe_script_directory_}/bfe.git_direct_agent.class.sh")
+    ${obj_name}.init "${args}" "${description_name}"
 }

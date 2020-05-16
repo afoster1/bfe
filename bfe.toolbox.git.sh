@@ -86,3 +86,17 @@ bfe.toolbox.git.mirror()
     # Restore the original working directory
     bfe.system.utils.run "popd"
 }
+
+bfe.toolbox.git.extract_repository_name()
+{
+    local url=$1
+
+    # Determine the name of the repository
+    local repo_name=${url%%/}
+    local repo_name=${repo_name##file://*/}
+    local repo_name=${repo_name##http://*/}
+    local repo_name=${repo_name##https://*/}
+    local repo_name=${repo_name##ssh://*/}
+    local repo_name=${repo_name%%.git}
+    ${ECHO_CMD} "${repo_name}"
+}
