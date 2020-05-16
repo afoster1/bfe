@@ -1,14 +1,14 @@
-# Tools to help operations involving hashing.
+# Tools to help operations involving auditing files.
 
 # Fields
-bfe_toolbox_hashing_args_= # Command line arguments
+bfe_toolbox_audit_args_= # Command line arguments
 
-bfe.toolbox.hashing.init()
+bfe.toolbox.audit.init()
 {
-    bfe_toolbox_hashing_args_=$1
+    bfe_toolbox_audit_args_=$1
 }
 
-bfe.toolbox.hashing.verify_audit_hashes()
+bfe.toolbox.audit.verify_audit_hashes()
 {
     local source_dir=$1
     local audit_filelist_filename=$2
@@ -18,14 +18,14 @@ bfe.toolbox.hashing.verify_audit_hashes()
     bfe.system.utils.run "rm -rf ${audit_filelist_filename}"
 
     # Audit the files against the filename hashes
-    bfe.toolbox.hashing.generate_audit_filelist "${source_dir}" "${FIND_CMD} . -type f" "${audit_filelist_filename}" "${audit_hashes_filename}"
+    bfe.toolbox.audit.generate_audit_filelist "${source_dir}" "${FIND_CMD} . -type f" "${audit_filelist_filename}" "${audit_hashes_filename}"
     bfe.system.utils.run "${HASHDEEP_CMD} -v -v -v -r -a -k ${audit_hashes_filename} -f ${audit_filelist_filename}"
     bfe.system.utils.run "rm -rf ${audit_filelist_filename}"
 
     bfe.system.utils.run "popd"
 }
 
-bfe.toolbox.hashing.delete_audit_hashes()
+bfe.toolbox.audit.delete_audit_hashes()
 {
     local source_dir=$1
     local audit_hashes_filename=$2
@@ -38,7 +38,7 @@ bfe.toolbox.hashing.delete_audit_hashes()
     fi
 }
 
-bfe.toolbox.hashing.generate_audit_hashes_using_rsync()
+bfe.toolbox.audit.generate_audit_hashes_using_rsync()
 {
     local source_dir=$1
     local filters=$2
@@ -50,7 +50,7 @@ bfe.toolbox.hashing.generate_audit_hashes_using_rsync()
     bfe.system.utils.run "rm -rf ${audit_filelist_filename}"
     bfe.system.utils.run "rm -rf ${audit_hashes_filename}"
 
-    bfe.toolbox.hashing.generate_audit_filelist "${source_dir}" "${RSYNC_CMD} -naic --protect-args --out-format=%n ${filters} ${source_dir} ${dest_dir}" "${audit_filelist_filename}" "${audit_hashes_filename}"
+    bfe.toolbox.audit.generate_audit_filelist "${source_dir}" "${RSYNC_CMD} -naic --protect-args --out-format=%n ${filters} ${source_dir} ${dest_dir}" "${audit_filelist_filename}" "${audit_hashes_filename}"
 
     # Generate the audit hashes from the filelist.
     bfe.system.utils.run "${HASHDEEP_CMD} -l -f ${audit_filelist_filename} >${audit_hashes_filename}"
@@ -58,7 +58,7 @@ bfe.toolbox.hashing.generate_audit_hashes_using_rsync()
     bfe.system.utils.run "popd"
 }
 
-bfe.toolbox.hashing.generate_audit_hashes_using_find()
+bfe.toolbox.audit.generate_audit_hashes_using_find()
 {
     local source_dir=$1
     local audit_filelist_filename=$2
@@ -68,7 +68,7 @@ bfe.toolbox.hashing.generate_audit_hashes_using_find()
     bfe.system.utils.run "rm -rf ${audit_filelist_filename}"
     bfe.system.utils.run "rm -rf ${audit_hashes_filename}"
 
-    bfe.toolbox.hashing.generate_audit_filelist "${source_dir}" "${FIND_CMD} . -type f" "${audit_filelist_filename}" "${audit_hashes_filename}"
+    bfe.toolbox.audit.generate_audit_filelist "${source_dir}" "${FIND_CMD} . -type f" "${audit_filelist_filename}" "${audit_hashes_filename}"
 
     # Generate the audit hashes from the filelist.
     bfe.system.utils.run "${HASHDEEP_CMD} -l -f ${audit_filelist_filename} >${audit_hashes_filename}"
@@ -77,14 +77,14 @@ bfe.toolbox.hashing.generate_audit_hashes_using_find()
     bfe.system.utils.run "popd"
 }
 
-bfe.toolbox.hashing.generate_audit_filelist()
+bfe.toolbox.audit.generate_audit_filelist()
 {
     local source_dir=$1
     local cmd=$2
     local audit_filelist_filename=$3
     local audit_hashes_filename=$4
 
-    local bdf=`${bfe_toolbox_hashing_args_}.backupDescriptionFilename`
+    local bdf=`${bfe_toolbox_audit_args_}.backupDescriptionFilename`
     local bdf=${bdf##*/}
     local bs=${BASH_SOURCE[0]#./*}
 

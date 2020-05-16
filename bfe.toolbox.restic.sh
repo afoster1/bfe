@@ -65,7 +65,7 @@ bfe.toolbox.restic.verify()
     bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} check --read-data"
 
     # Audit the restored files against the filename hashes
-    bfe.toolbox.hashing.verify_audit_hashes "${restore_dir}/" "${audit_filelist_filename}" "${audit_hashes_filename}"
+    bfe.toolbox.audit.verify_audit_hashes "${restore_dir}/" "${audit_filelist_filename}" "${audit_hashes_filename}"
 }
 
 bfe.toolbox.restic.cleanup()

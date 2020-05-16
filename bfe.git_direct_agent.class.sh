@@ -45,7 +45,7 @@ bfe.git_direct_agent.stage()
     done
 
     bfe.system.utils.copyBFE "${bfe_script_directory_}" "${destination_dir}"
-    bfe.toolbox.hashing.generate_audit_hashes_using_find "${destination_dir}" "${audit_filelist_filename}" "${audit_hashes_filename}"
+    bfe.toolbox.audit.generate_audit_hashes_using_find "${destination_dir}" "${audit_filelist_filename}" "${audit_hashes_filename}"
 }
 
 bfe.git_direct_agent.backup()
@@ -124,7 +124,7 @@ bfe.git_direct_agent.verify()
             ;;
     esac
 
-    bfe.toolbox.hashing.verify_audit_hashes "${source_dir}" "${audit_filelist_filename}" "${audit_hashes_filename}"
+    bfe.toolbox.audit.verify_audit_hashes "${source_dir}" "${audit_filelist_filename}" "${audit_hashes_filename}"
 }
 
 bfe.git_direct_agent.cleanup()

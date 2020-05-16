@@ -8,7 +8,7 @@
 . "${bfe_script_directory_}/bfe.system.class.sh"
 . "${bfe_script_directory_}/bfe.toolbox.gitolite.sh"
 . "${bfe_script_directory_}/bfe.toolbox.git.sh"
-. "${bfe_script_directory_}/bfe.toolbox.hashing.sh"
+. "${bfe_script_directory_}/bfe.toolbox.audit.sh"
 . "${bfe_script_directory_}/bfe.toolbox.restic.sh"
 . "${bfe_script_directory_}/bfe.toolbox.rsync.sh"
 . "${bfe_script_directory_}/bfe.toolbox.filesystem.sh"

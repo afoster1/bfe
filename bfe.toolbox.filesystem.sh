@@ -38,12 +38,12 @@ bfe.toolbox.filesystem.sync_and_audit()
             else
                 if [ -n "${source_directory}" ]
                 then
-                    bfe.toolbox.hashing.generate_audit_hashes_using_rsync "${source_directory}" "${filters}" "${destination_dir}" "${audit_filelist_filename}" "${audit_hashes_filename}"
+                    bfe.toolbox.audit.generate_audit_hashes_using_rsync "${source_directory}" "${filters}" "${destination_dir}" "${audit_filelist_filename}" "${audit_hashes_filename}"
                     bfe.toolbox.rsync.rsync_transfer "${source_directory}" "${filters}" "${destination_dir}/${description_name}"
                     local sub_dir=${source_directory%*/} # Remove trailing slash
                     local sub_dir=${source_directory##*/} # Remove upto last slash
-                    bfe.toolbox.hashing.verify_audit_hashes "${destination_dir}/${description_name}/${sub_dir}/" "${audit_filelist_filename}" "${audit_hashes_filename}"
-                    bfe.toolbox.hashing.delete_audit_hashes "${destination_dir}/${description_name}/${sub_dir}/" "${audit_hashes_filename}"
+                    bfe.toolbox.audit.verify_audit_hashes "${destination_dir}/${description_name}/${sub_dir}/" "${audit_filelist_filename}" "${audit_hashes_filename}"
+                    bfe.toolbox.audit.delete_audit_hashes "${destination_dir}/${description_name}/${sub_dir}/" "${audit_hashes_filename}"
                 fi
                 local source_directory=${data}
 
@@ -54,14 +54,14 @@ bfe.toolbox.filesystem.sync_and_audit()
     done
     if [ -n "${source_directory}" ]
     then
-        bfe.toolbox.hashing.generate_audit_hashes_using_rsync "${source_directory}" "${filters}" "${destination_dir}" "${audit_filelist_filename}" "${audit_hashes_filename}"
+        bfe.toolbox.audit.generate_audit_hashes_using_rsync "${source_directory}" "${filters}" "${destination_dir}" "${audit_filelist_filename}" "${audit_hashes_filename}"
         bfe.toolbox.rsync.rsync_transfer "${source_directory}" "${filters}" "${destination_dir}/${description_name}"
         local sub_dir=${source_directory%*/} # Remove trailing slash
         local sub_dir=${source_directory##*/} # Remove upto last slash
-        bfe.toolbox.hashing.verify_audit_hashes "${destination_dir}/${description_name}/${sub_dir}/" "${audit_filelist_filename}" "${audit_hashes_filename}"
-        bfe.toolbox.hashing.delete_audit_hashes "${destination_dir}/${description_name}/${sub_dir}/" "${audit_hashes_filename}"
+        bfe.toolbox.audit.verify_audit_hashes "${destination_dir}/${description_name}/${sub_dir}/" "${audit_filelist_filename}" "${audit_hashes_filename}"
+        bfe.toolbox.audit.delete_audit_hashes "${destination_dir}/${description_name}/${sub_dir}/" "${audit_hashes_filename}"
     fi
 
     # Generate an audit hash for each file to be included in the audit.
-    bfe.toolbox.hashing.generate_audit_hashes_using_find "${destination_dir}/${description_name}/" "${audit_filelist_filename}" "${audit_hashes_filename}"
+    bfe.toolbox.audit.generate_audit_hashes_using_find "${destination_dir}/${description_name}/" "${audit_filelist_filename}" "${audit_hashes_filename}"
 }
