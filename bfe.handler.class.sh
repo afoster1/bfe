@@ -28,6 +28,10 @@ bfe.handler.process()
             bfe.filesystem_restic_agent agent ${bfe.handler_args_} backup_description
             ;;
 
+        filesystem_direct)
+            bfe.filesystem_direct_agent agent ${bfe.handler_args_} backup_description
+            ;;
+
         gitolite_restic)
             bfe.gitolite_restic_agent agent ${bfe.handler_args_} backup_description descriptions
             ;;

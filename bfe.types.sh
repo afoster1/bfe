@@ -59,6 +59,14 @@ bfe.filesystem_restic_agent(){
     ${obj_name}.init ${args} ${description_name}
 }
 
+bfe.filesystem_direct_agent(){
+    local obj_name=$1
+    local args=$2
+    local description_name=$3
+    . <(sed "s/bfe.filesystem_direct_agent/${obj_name}/g" "${bfe_script_directory_}/bfe.filesystem_direct_agent.class.sh")
+    ${obj_name}.init ${args} ${description_name}
+}
+
 bfe.gitolite_restic_agent(){
     local obj_name=$1
     local args=$2
