@@ -8,7 +8,6 @@ bfe.git_restic_agent=()
 
 # properties IDs
 bfe.git_restic_agent_descriptionName=0
-bfe.git_restic_agent_descriptions=1
 
 # fields
 bfe.git_restic_agent_args_= # Command line arguments
@@ -17,7 +16,6 @@ bfe.git_restic_agent_delegate_= # Composition relationship with restic_agent
 bfe.git_restic_agent.init(){
     bfe.git_restic_agent_args_=$1
     bfe.git_restic_agent.descriptionName = $2
-    bfe.git_restic_agent.descriptions = $3
 
     # The git_restic_agent depends on the filesystem_restic_agent, using its functionality
     # for most tasks.  This object instance represents the composition
@@ -30,8 +28,6 @@ bfe.git_restic_agent.init(){
 
 bfe.git_restic_agent.descriptionName() { bfe.system.utils.propertyAccessor bfe.git_restic_agent_properties $1 $2
 }
-bfe.git_restic_agent.descriptions() { bfe.system.utils.propertyAccessor bfe.git_restic_agent_properties $1 $2
-}
 
 bfe.git_restic_agent.stage()
 {
@@ -39,7 +35,6 @@ bfe.git_restic_agent.stage()
     local description_name=`${description_object_name}.name`
     local work_dir=`${bfe.git_restic_agent_args_}.workDir`
     local stage_sub_dir=`${bfe.git_restic_agent_args_}.stageSubDir`
-    local descriptions=`bfe.git_restic_agent.descriptions`
 
     local destination_dir="${work_dir}/${stage_sub_dir}/${description_name}"
 
