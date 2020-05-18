@@ -40,7 +40,7 @@ bfe.filesystem_direct_agent.backup()
     local destination_dir=$(bfe.toolbox.utils.getBackupDirectory "${description_object_name}")
     local destination_dir=$(bfe.toolbox.utils.getParentDirectoryOf "${destination_dir}")
 
-    bfe.toolbox.rsync.rsync_transfer "${source_dir}" "" "${destination_dir}"
+    bfe.toolbox.rsync.transfer "${source_dir}" "" "${destination_dir}"
 }
 
 bfe.filesystem_direct_agent.restore()
@@ -50,7 +50,7 @@ bfe.filesystem_direct_agent.restore()
     local destination_dir=$(bfe.toolbox.utils.getRestoreDirectory "${description_object_name}")
     local destination_dir=$(bfe.toolbox.utils.getParentDirectoryOf "${destination_dir}")
 
-    bfe.toolbox.rsync.rsync_transfer "${source_dir}" "" "${destination_dir}"
+    bfe.toolbox.rsync.transfer "${source_dir}" "" "${destination_dir}"
 }
 
 bfe.filesystem_direct_agent.verify()

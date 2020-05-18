@@ -1,6 +1,6 @@
 # Tools to help operations involving rsync
 
-bfe.toolbox.rsync.rsync_transfer()
+bfe.toolbox.rsync.transfer()
 {
     local source_dir=$1
     local filters=$2

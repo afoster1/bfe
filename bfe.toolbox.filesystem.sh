@@ -39,7 +39,7 @@ bfe.toolbox.filesystem.sync_and_audit()
                 if [ -n "${source_directory}" ]
                 then
                     bfe.toolbox.audit.generate_audit_hashes_using_rsync "${source_directory}" "${filters}" "${destination_dir}" "${audit_filelist_filename}" "${audit_hashes_filename}"
-                    bfe.toolbox.rsync.rsync_transfer "${source_directory}" "${filters}" "${destination_dir}/${description_name}"
+                    bfe.toolbox.rsync.transfer "${source_directory}" "${filters}" "${destination_dir}/${description_name}"
                     local sub_dir=${source_directory%*/} # Remove trailing slash
                     local sub_dir=${source_directory##*/} # Remove upto last slash
                     bfe.toolbox.audit.verify_audit_hashes "${destination_dir}/${description_name}/${sub_dir}/" "${audit_filelist_filename}" "${audit_hashes_filename}"
@@ -55,7 +55,7 @@ bfe.toolbox.filesystem.sync_and_audit()
     if [ -n "${source_directory}" ]
     then
         bfe.toolbox.audit.generate_audit_hashes_using_rsync "${source_directory}" "${filters}" "${destination_dir}" "${audit_filelist_filename}" "${audit_hashes_filename}"
-        bfe.toolbox.rsync.rsync_transfer "${source_directory}" "${filters}" "${destination_dir}/${description_name}"
+        bfe.toolbox.rsync.transfer "${source_directory}" "${filters}" "${destination_dir}/${description_name}"
         local sub_dir=${source_directory%*/} # Remove trailing slash
         local sub_dir=${source_directory##*/} # Remove upto last slash
         bfe.toolbox.audit.verify_audit_hashes "${destination_dir}/${description_name}/${sub_dir}/" "${audit_filelist_filename}" "${audit_hashes_filename}"

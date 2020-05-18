@@ -51,7 +51,7 @@ bfe.git_direct_agent.backup()
     local source_dir=$(bfe.toolbox.utils.getStageDirectory "${description_object_name}")
     local destination_dir=$(bfe.toolbox.utils.getBackupDirectory "${description_object_name}")
 
-    bfe.toolbox.rsync.rsync_transfer "${source_dir}" "" "${destination_dir}"
+    bfe.toolbox.rsync.transfer "${source_dir}" "" "${destination_dir}"
 }
 
 bfe.git_direct_agent.restore()
@@ -61,7 +61,7 @@ bfe.git_direct_agent.restore()
     local destination_dir=$(bfe.toolbox.utils.getRestoreDirectory "${description_object_name}")
     local destination_dir=$(bfe.toolbox.utils.getParentDirectoryOf "${destination_dir}")
 
-    bfe.toolbox.rsync.rsync_transfer "${source_dir}" "" "${destination_dir}"
+    bfe.toolbox.rsync.transfer "${source_dir}" "" "${destination_dir}"
 }
 
 bfe.git_direct_agent.verify()
