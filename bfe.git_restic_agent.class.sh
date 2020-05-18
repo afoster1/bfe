@@ -32,11 +32,7 @@ bfe.git_restic_agent.descriptionName() { bfe.system.utils.propertyAccessor bfe.g
 bfe.git_restic_agent.stage()
 {
     local description_object_name=`bfe.git_restic_agent.descriptionName`
-    local description_name=`${description_object_name}.name`
-    local work_dir=`${bfe.git_restic_agent_args_}.workDir`
-    local stage_sub_dir=`${bfe.git_restic_agent_args_}.stageSubDir`
-
-    local destination_dir="${work_dir}/${stage_sub_dir}/${description_name}"
+    local destination_dir=$(bfe.toolbox.utils.getStageDirectory "${description_object_name}")
 
     e="declare -a bfe.git_restic_agent_urls=`${description_object_name}.data`"
     eval "$e"
@@ -58,25 +54,9 @@ bfe.git_restic_agent.restore()
 
 bfe.git_restic_agent.verify()
 {
-    local object_name=`bfe.git_restic_agent.descriptionName`
-    local description_name=`${object_name}.name`
-    local backup_medium=`${object_name}.medium`
-    local backup_medium_label=`${object_name}.mediumLabel`
-    local work_dir=`${bfe.git_restic_agent_args_}.workDir`
-    local backup_sub_dir=`${bfe.git_restic_agent_args_}.backupSubDir`
-    local backup_medium_dir=`${bfe.git_restic_agent_args_}.backupMediumDir`
-    local hostname=`${bfe.git_restic_agent_args_}.hostname`
+    local description_object_name=`bfe.git_restic_agent.descriptionName`
+    local source_dir=$(bfe.toolbox.utils.getBackupDirectory "${description_object_name}")
     local passphrase=`${bfe.git_restic_agent_args_}.passphrase`
-
-    local source_dir=
-    case ${backup_medium} in
-        local)
-            local source_dir=${work_dir}/${backup_sub_dir}/${description_name}
-            ;;
-        usbdrive)
-            local source_dir=${backup_medium_dir}/${backup_medium_label}/${hostname}/${description_name}
-            ;;
-    esac
 
     # Verify the backup data first.
     bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} check --read-data"

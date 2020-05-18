@@ -1,7 +1,5 @@
 # Class with responsibility of handling backup of git repositories from a gitolite server using restic.
 
-# TODO Check backup to "local" media - not sure this is working.
-
 bfe.gitolite_restic_agent=true
 
 # collection of property values
@@ -37,13 +35,8 @@ bfe.gitolite_restic_agent.descriptions() { bfe.system.utils.propertyAccessor bfe
 bfe.gitolite_restic_agent.stage()
 {
     local description_object_name=`bfe.gitolite_restic_agent.descriptionName`
-    local description_name=`${description_object_name}.name`
-    local work_dir=`${bfe.gitolite_restic_agent_args_}.workDir`
-    local stage_sub_dir=`${bfe.gitolite_restic_agent_args_}.stageSubDir`
+    local destination_dir=$(bfe.toolbox.utils.getStageDirectory "${description_object_name}")
     local descriptions=`bfe.gitolite_restic_agent.descriptions`
-
-    # TODO ANFO If this is for local media, the destination would be different.
-    local destination_dir="${work_dir}/${stage_sub_dir}/${description_name}"
 
     bfe.toolbox.gitolite.clone "${description_object_name}" "${descriptions}" "${destination_dir}"
 }
@@ -60,25 +53,9 @@ bfe.gitolite_restic_agent.restore()
 
 bfe.gitolite_restic_agent.verify()
 {
-    local object_name=`bfe.gitolite_restic_agent.descriptionName`
-    local description_name=`${object_name}.name`
-    local backup_medium=`${object_name}.medium`
-    local backup_medium_label=`${object_name}.mediumLabel`
-    local work_dir=`${bfe.gitolite_restic_agent_args_}.workDir`
-    local backup_sub_dir=`${bfe.gitolite_restic_agent_args_}.backupSubDir`
-    local backup_medium_dir=`${bfe.gitolite_restic_agent_args_}.backupMediumDir`
-    local hostname=`${bfe.gitolite_restic_agent_args_}.hostname`
+    local description_object_name=`bfe.gitolite_restic_agent.descriptionName`
+    local source_dir=$(bfe.toolbox.utils.getBackupDirectory "${description_object_name}")
     local passphrase=`${bfe.gitolite_restic_agent_args_}.passphrase`
-
-    local source_dir=
-    case ${backup_medium} in
-        local)
-            local source_dir=${work_dir}/${backup_sub_dir}/${description_name}
-            ;;
-        usbdrive)
-            local source_dir=${backup_medium_dir}/${backup_medium_label}/${hostname}/${description_name}
-            ;;
-    esac
 
     # Verify the backup data first.
     bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} check --read-data"

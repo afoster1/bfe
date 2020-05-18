@@ -8,6 +8,7 @@ bfe.system.init() {
     bfe_system_notifier_=$2
 
     bfe.system.log.init
+    bfe.toolbox.utils.init "${bfe_system_args_}"
     bfe.toolbox.audit.init "${bfe_system_args_}"
     bfe.toolbox.filesystem.init "${bfe_system_args_}"
     bfe.toolbox.restic.init "${bfe_system_args_}"

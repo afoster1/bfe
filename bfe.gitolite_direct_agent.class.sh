@@ -34,28 +34,9 @@ bfe.gitolite_direct_agent.backup()
 {
     local description_object_name=`bfe.gitolite_direct_agent.descriptionName`
     local descriptions=`bfe.gitolite_direct_agent.descriptions`
-    local description_name=`${description_object_name}.name`
-    local backup_medium=`${description_object_name}.medium`
-    local backup_medium_label=`${description_object_name}.mediumLabel`
-    local work_dir=`${bfe.gitolite_direct_agent_args_}.workDir`
-    local backup_sub_dir=`${bfe.gitolite_direct_agent_args_}.backupSubDir`
-    local backup_medium_dir=`${bfe.gitolite_direct_agent_args_}.backupMediumDir`
-    local hostname=`${bfe.gitolite_direct_agent_args_}.hostname`
-    local backup_description_filename=`${bfe.gitolite_direct_agent_args_}.backupDescriptionFilename`
-    local orig_dir=$(pwd)
-
-    local destination_dir=
-    case ${backup_medium} in
-        local)
-            local destination_dir=${work_dir}/${backup_sub_dir}/${description_name}
-            ;;
-        usbdrive)
-            local destination_dir=${backup_medium_dir}/${backup_medium_label}/${hostname}/${description_name}
-            ;;
-    esac
+    local destination_dir=$(bfe.toolbox.utils.getBackupDirectory "${description_object_name}")
 
     bfe.toolbox.gitolite.clone "${description_object_name}" "${descriptions}" "${destination_dir}"
-
     bfe.system.utils.copyBFE "${bfe_script_directory_}" "${destination_dir}"
 }
 
