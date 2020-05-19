@@ -103,7 +103,6 @@ bfe.toolbox.gitolite.clone()
             bfe.toolbox.git.clone "${url}" "${destination_dir}"
         fi
     done
-
 }
 
 bfe.toolbox.gitolite.is_exposed_repo()
@@ -113,6 +112,7 @@ bfe.toolbox.gitolite.is_exposed_repo()
     local repository=$3
     local descriptions=$4
     local include_repositories=()
+    local gitolite_backup_types=('gitolite')
 
     # search backup descriptions for "exposed" repositories
     local num_backup_descriptions=`descriptions.names count`
@@ -130,7 +130,7 @@ bfe.toolbox.gitolite.is_exposed_repo()
             local ssh_server_port_ok=false
 
             descriptions.getBackupDescription d "${dn}"
-            if [ "`d.type`" == "gitolite" ]
+            if [ $(bfe.system.utils.starts_with_any_of "${gitolite_backup_types[@]}" "`d.type`") == "y" ]
             then
                 local type_ok=true
             fi
