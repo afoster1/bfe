@@ -69,18 +69,18 @@ bfe.system.stdout.printArray(){
 }
 
 bfe.system.log.init() {
-    local backupName=`${bfe_system_args_}.backupName`
-    local workDir=`${bfe_system_args_}.workDir`
-    local logSubDir=`${bfe_system_args_}.logSubDir`
+    local backup_name=`${bfe_system_args_}.backupName`
     local hostname=`${bfe_system_args_}.hostname`
+    local log_dir=`bfe.toolbox.utils.getLogDirectory`
 
     if [ "`${bfe_system_args_}.useLog`" = true ]
     then
-        if [ -n "${backupName}" ]
+        bfe.system.utils.run "${MKDIR_CMD} -p ${log_dir}"
+        if [ -n "${backup_name}" ]
         then
-            bfe_system_log_filename_=${workDir}/${logSubDir}/`date +%y%m%d_%H%M%S`_${hostname}_${backupName}
+            bfe_system_log_filename_=${log_dir}`date +%y%m%d_%H%M%S`_${hostname}_${backup_name}
         else
-            bfe_system_log_filename_=${workDir}/${logSubDir}/`date +%y%m%d_%H%M%S`_${hostname}
+            bfe_system_log_filename_=${log_dir}`date +%y%m%d_%H%M%S`_${hostname}
         fi
     else
         unset bfe_system_log_filename_

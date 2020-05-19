@@ -14,6 +14,14 @@ bfe.toolbox.utils.getParentDirectoryOf()
     ${ECHO_CMD} "${parent_dir}"
 }
 
+bfe.toolbox.utils.getLogDirectory()
+{
+    local work_dir=`${bfe_system_args_}.workDir`
+    local log_sub_dir=`${bfe_system_args_}.logSubDir`
+    local dir="${work_dir}/${log_sub_dir}/"
+    ${ECHO_CMD} "${dir}"
+}
+
 bfe.toolbox.utils.getStageDirectory()
 {
     local description_object_name=$1
