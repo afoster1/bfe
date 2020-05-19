@@ -35,59 +35,59 @@ bfe.arguments_auditHashesFilename=26
 bfe.arguments_actionsArray=()
 bfe.arguments_backupGroupsArray=()
 
-bfe.arguments.configFilename() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.configFilename() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.passphraseFilename() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.passphraseFilename() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.passphrase() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.passphrase() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.emailPasswordFilename() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.emailPasswordFilename() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.emailPassword() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.emailPassword() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.backupDescriptionFilename() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.backupDescriptionFilename() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.sendEmail() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.sendEmail() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.emailFrom() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.emailFrom() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.hostname() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.hostname() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.backupMedium() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.backupMedium() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.backupMediumLabel() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.backupMediumLabel() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.workDir() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.workDir() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.backupMediumDir() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.backupMediumDir() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.stageSubDir() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.stageSubDir() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.backupSubDir() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.backupSubDir() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.restoreSubDir() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.restoreSubDir() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.logSubDir() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.logSubDir() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.backupName() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.backupName() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.actions() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.actions() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.backupGroups() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.backupGroups() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.fullBackup() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.fullBackup() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.useLog() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.useLog() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.dryRun() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.dryRun() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.certificateDatabase() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.certificateDatabase() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.verbose() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.verbose() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.auditFilelistFilename() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.auditFilelistFilename() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
-bfe.arguments.auditHashesFilename() { bfe.system.utils.propertyAccessor bfe.arguments_properties $1 $2
+bfe.arguments.auditHashesFilename() { bfe.toolbox.utils.propertyAccessor bfe.arguments_properties $1 $2
 }
 
 bfe.arguments.init()
@@ -280,7 +280,7 @@ bfe.arguments.setDefaults()
 
     if [ -z "`bfe.arguments.workDir`" ]
     then
-        bfe.arguments.workDir = `bfe.system.utils.getWorkingDirectory`
+        bfe.arguments.workDir = `bfe.toolbox.utils.getWorkingDirectory`
     fi
 
 

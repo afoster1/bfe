@@ -26,7 +26,7 @@ bfe.git_restic_agent.init(){
     bfe.git_restic_agent=true
 }
 
-bfe.git_restic_agent.descriptionName() { bfe.system.utils.propertyAccessor bfe.git_restic_agent_properties $1 $2
+bfe.git_restic_agent.descriptionName() { bfe.toolbox.utils.propertyAccessor bfe.git_restic_agent_properties $1 $2
 }
 
 bfe.git_restic_agent.stage()
@@ -59,7 +59,7 @@ bfe.git_restic_agent.verify()
     local passphrase=`${bfe.git_restic_agent_args_}.passphrase`
 
     # Verify the backup data first.
-    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} check --read-data"
+    bfe.toolbox.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} check --read-data"
 
     # TODO ANFO Improve the verification by adapting the audit hashes
     # verification functionality to compare the staged repos against the

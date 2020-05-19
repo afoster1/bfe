@@ -24,23 +24,23 @@ bfe.description.init(){
     bfe.description.name = $2
 }
 
-bfe.description.name() { bfe.system.utils.propertyAccessor bfe.description_properties $1 $2
+bfe.description.name() { bfe.toolbox.utils.propertyAccessor bfe.description_properties $1 $2
 }
-bfe.description.type() { bfe.system.utils.propertyAccessor bfe.description_properties $1 $2
+bfe.description.type() { bfe.toolbox.utils.propertyAccessor bfe.description_properties $1 $2
 }
-bfe.description.medium() { bfe.system.utils.propertyAccessor bfe.description_properties $1 $2
+bfe.description.medium() { bfe.toolbox.utils.propertyAccessor bfe.description_properties $1 $2
 }
-bfe.description.mediumLabel() { bfe.system.utils.propertyAccessor bfe.description_properties $1 $2
+bfe.description.mediumLabel() { bfe.toolbox.utils.propertyAccessor bfe.description_properties $1 $2
 }
-bfe.description.keepFull() { bfe.system.utils.propertyAccessor bfe.description_properties $1 $2
+bfe.description.keepFull() { bfe.toolbox.utils.propertyAccessor bfe.description_properties $1 $2
 }
-bfe.description.sshServer() { bfe.system.utils.propertyAccessor bfe.description_properties $1 $2
+bfe.description.sshServer() { bfe.toolbox.utils.propertyAccessor bfe.description_properties $1 $2
 }
-bfe.description.sshPort() { bfe.system.utils.propertyAccessor bfe.description_properties $1 $2
+bfe.description.sshPort() { bfe.toolbox.utils.propertyAccessor bfe.description_properties $1 $2
 }
-bfe.description.sshUserId() { bfe.system.utils.propertyAccessor bfe.description_properties $1 $2
+bfe.description.sshUserId() { bfe.toolbox.utils.propertyAccessor bfe.description_properties $1 $2
 }
-bfe.description.data() { bfe.system.utils.propertyAccessor bfe.description_properties $1 $2
+bfe.description.data() { bfe.toolbox.utils.propertyAccessor bfe.description_properties $1 $2
 }
 
 bfe.description.print()

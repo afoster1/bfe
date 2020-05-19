@@ -30,17 +30,17 @@ bfe.toolbox.restic.backup()
     local destination_dir=$2
     local passphrase=$3
 
-    bfe.system.utils.run "${MKDIR_CMD} -p ${destination_dir}"
+    bfe.toolbox.utils.run "${MKDIR_CMD} -p ${destination_dir}"
 
     if [ $(bfe.toolbox.restic.is_repo_initialised "${destination_dir}" "${passphrase}") == "n" ]
     then
-        bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} init --repo ${destination_dir}"
+        bfe.toolbox.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} init --repo ${destination_dir}"
     fi
 
-    bfe.system.utils.run "cd ${source_dir}"
-    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} backup --repo ${destination_dir} backup . --verbose"
+    bfe.toolbox.utils.run "cd ${source_dir}"
+    bfe.toolbox.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} backup --repo ${destination_dir} backup . --verbose"
 
-    bfe.system.utils.copyBFE "${bfe_script_directory_}" "${destination_dir}"
+    bfe.toolbox.utils.copyBFE "${bfe_script_directory_}" "${destination_dir}"
 }
 
 bfe.toolbox.restic.restore()
@@ -49,8 +49,8 @@ bfe.toolbox.restic.restore()
     local destination_dir=$2
     local passphrase=$3
 
-    bfe.system.utils.run "${MKDIR_CMD} -p ${destination_dir}"
-    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} restore latest --repo ${source_dir} --target ${destination_dir}/"
+    bfe.toolbox.utils.run "${MKDIR_CMD} -p ${destination_dir}"
+    bfe.toolbox.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} restore latest --repo ${source_dir} --target ${destination_dir}/"
 }
 
 bfe.toolbox.restic.verify()
@@ -62,7 +62,7 @@ bfe.toolbox.restic.verify()
     local audit_hashes_filename=`${bfe_toolbox_restic_args_}.auditHashesFilename`
 
     # Verify the backup data first.
-    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} check --read-data"
+    bfe.toolbox.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} check --read-data"
 
     # Audit the restored files against the filename hashes
     bfe.toolbox.audit.verify_audit_hashes "${restore_dir}/" "${audit_filelist_filename}" "${audit_hashes_filename}"
@@ -75,8 +75,8 @@ bfe.toolbox.restic.cleanup()
     local keep_full=$3
 
     # Run the cleanup
-    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} snapshots"
-    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} forget --keep-last ${keep_full} --prune"
-    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} snapshots"
-    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} check"
+    bfe.toolbox.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} snapshots"
+    bfe.toolbox.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} forget --keep-last ${keep_full} --prune"
+    bfe.toolbox.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} snapshots"
+    bfe.toolbox.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} --repo ${source_dir} check"
 }

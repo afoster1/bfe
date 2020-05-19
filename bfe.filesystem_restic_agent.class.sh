@@ -18,7 +18,7 @@ bfe.filesystem_restic_agent.init(){
     bfe.filesystem_restic_agent=true
 }
 
-bfe.filesystem_restic_agent.descriptionName() { bfe.system.utils.propertyAccessor bfe.filesystem_restic_agent_properties $1 $2
+bfe.filesystem_restic_agent.descriptionName() { bfe.toolbox.utils.propertyAccessor bfe.filesystem_restic_agent_properties $1 $2
 }
 
 bfe.filesystem_restic_agent.stage()
@@ -76,5 +76,5 @@ bfe.filesystem_restic_agent.status()
     local source_dir=$(bfe.toolbox.utils.getBackupDirectory "${description_object_name}")
     local passphrase=`${bfe.filesystem_restic_agent_args_}.passphrase`
 
-    bfe.system.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} snapshots --repo ${source_dir}"
+    bfe.toolbox.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} snapshots --repo ${source_dir}"
 }

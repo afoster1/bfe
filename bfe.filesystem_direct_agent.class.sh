@@ -21,7 +21,7 @@ bfe.filesystem_direct_agent.init(){
     bfe.filesystem_direct_agent=true
 }
 
-bfe.filesystem_direct_agent.descriptionName() { bfe.system.utils.propertyAccessor bfe.filesystem_direct_agent_properties $1 $2
+bfe.filesystem_direct_agent.descriptionName() { bfe.toolbox.utils.propertyAccessor bfe.filesystem_direct_agent_properties $1 $2
 }
 
 bfe.filesystem_direct_agent.stage()

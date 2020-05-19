@@ -24,26 +24,26 @@ bfe.toolbox.git.clone()
 
     # Before we begin, ensure we are in the correct directory and that the git
     # clone directory doesn't already exist.
-    bfe.system.utils.run "${MKDIR_CMD} -p ${destination_dir}"
-    bfe.system.utils.run "pushd ${destination_dir}"
-    bfe.system.utils.run "${RM_CMD} -rf \"./${repo_name}\""
+    bfe.toolbox.utils.run "${MKDIR_CMD} -p ${destination_dir}"
+    bfe.toolbox.utils.run "pushd ${destination_dir}"
+    bfe.toolbox.utils.run "${RM_CMD} -rf \"./${repo_name}\""
 
     # Clone the repos and go into the folder
-    bfe.system.utils.run "${GIT_CMD} clone ${url} ${repo_name}"
-    bfe.system.utils.run "cd ${repo_name}"
+    bfe.toolbox.utils.run "${GIT_CMD} clone ${url} ${repo_name}"
+    bfe.toolbox.utils.run "cd ${repo_name}"
 
     # Pull all branches
-    bfe.system.utils.run "${GIT_CMD} branch -r | ${GREP_CMD} -v HEAD | ${GREP_CMD} -v master | while read branch; do ${GIT_CMD} branch --track \${branch#*/} \$branch; done"
+    bfe.toolbox.utils.run "${GIT_CMD} branch -r | ${GREP_CMD} -v HEAD | ${GREP_CMD} -v master | while read branch; do ${GIT_CMD} branch --track \${branch#*/} \$branch; done"
 
     # Pull all remote data and tags
-    bfe.system.utils.run "${GIT_CMD} fetch --all"
-    bfe.system.utils.run "${GIT_CMD} fetch --tags"
-    bfe.system.utils.run_noerror "${GIT_CMD} pull --all" # This can fail if an empty repository is cloned.
-    bfe.system.utils.run "${GIT_CMD} gc" # Cleanup unnecessary files and optimize the local repository
-    bfe.system.utils.run "${GIT_CMD} fsck --full" # Verify clone
+    bfe.toolbox.utils.run "${GIT_CMD} fetch --all"
+    bfe.toolbox.utils.run "${GIT_CMD} fetch --tags"
+    bfe.toolbox.utils.run_noerror "${GIT_CMD} pull --all" # This can fail if an empty repository is cloned.
+    bfe.toolbox.utils.run "${GIT_CMD} gc" # Cleanup unnecessary files and optimize the local repository
+    bfe.toolbox.utils.run "${GIT_CMD} fsck --full" # Verify clone
 
     # Restore the original working directory
-    bfe.system.utils.run "popd"
+    bfe.toolbox.utils.run "popd"
 }
 
 bfe.toolbox.git.mirror()
@@ -71,20 +71,20 @@ bfe.toolbox.git.mirror()
 
     # Before we begin, ensure we are in the correct directory and that the git
     # clone directory doesn't already exist.
-    bfe.system.utils.run "${MKDIR_CMD} -p ${dest}"
-    bfe.system.utils.run "pushd ${dest}"
-    bfe.system.utils.run "${RM_CMD} -rf \"./${repo_name}\""
+    bfe.toolbox.utils.run "${MKDIR_CMD} -p ${dest}"
+    bfe.toolbox.utils.run "pushd ${dest}"
+    bfe.toolbox.utils.run "${RM_CMD} -rf \"./${repo_name}\""
 
     # Mirror the repo
-    bfe.system.utils.run "${GIT_CMD} clone --mirror ${url} ${repo_name}"
+    bfe.toolbox.utils.run "${GIT_CMD} clone --mirror ${url} ${repo_name}"
 
     # Cleanup
-    bfe.system.utils.run "cd ${repo_name}"
-    bfe.system.utils.run "${GIT_CMD} gc" # Cleanup unnecessary files and optimize the local repository
-    bfe.system.utils.run "${GIT_CMD} fsck --full" # Verify clone
+    bfe.toolbox.utils.run "cd ${repo_name}"
+    bfe.toolbox.utils.run "${GIT_CMD} gc" # Cleanup unnecessary files and optimize the local repository
+    bfe.toolbox.utils.run "${GIT_CMD} fsck --full" # Verify clone
 
     # Restore the original working directory
-    bfe.system.utils.run "popd"
+    bfe.toolbox.utils.run "popd"
 }
 
 bfe.toolbox.git.extract_repository_name()

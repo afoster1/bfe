@@ -16,8 +16,8 @@ bfe.toolbox.filesystem.sync_and_audit()
     local audit_filelist_filename=`${bfe_toolbox_filesystem_args_}.auditFilelistFilename`
     local audit_hashes_filename=`${bfe_toolbox_filesystem_args_}.auditHashesFilename`
 
-    bfe.system.utils.run "${RM_CMD} -rf ${destination_dir}/${description_name}"
-    bfe.system.utils.run "${MKDIR_CMD} -p ${destination_dir}/${description_name}"
+    bfe.toolbox.utils.run "${RM_CMD} -rf ${destination_dir}/${description_name}"
+    bfe.toolbox.utils.run "${MKDIR_CMD} -p ${destination_dir}/${description_name}"
 
     local e="declare -a data_array=`${description_instance_name}.data`"
     eval "$e"
@@ -61,7 +61,7 @@ bfe.toolbox.filesystem.sync_and_audit()
         bfe.toolbox.audit.verify_audit_hashes "${destination_dir}/${description_name}/${sub_dir}/" "${audit_filelist_filename}" "${audit_hashes_filename}"
         bfe.toolbox.audit.delete_audit_hashes "${destination_dir}/${description_name}/${sub_dir}/" "${audit_hashes_filename}"
     fi
-    bfe.system.utils.copyBFE "${bfe_script_directory_}" "${destination_dir}"
+    bfe.toolbox.utils.copyBFE "${bfe_script_directory_}" "${destination_dir}"
 
     # Generate an audit hash for each file to be included in the audit.
     bfe.toolbox.audit.generate_audit_hashes_using_find "${destination_dir}/${description_name}/" "${audit_filelist_filename}" "${audit_hashes_filename}"

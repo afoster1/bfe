@@ -75,11 +75,11 @@ bfe.handler.process()
                     ;;
                 mount)
                     # The "mount" action is the same for all agents
-                    bfe.system.utils.mountMedium "${description_name}" "${medium_type}" "${medium_label}" "${medium_dir}"
+                    bfe.toolbox.utils.mountMedium "${description_name}" "${medium_type}" "${medium_label}" "${medium_dir}"
                     ;;
                 unmount)
                     # The "unmount" action is the same for all agents
-                    bfe.system.utils.unmountMedium "${description_name}" "${medium_type}" "${medium_label}" "${medium_dir}"
+                    bfe.toolbox.utils.unmountMedium "${description_name}" "${medium_type}" "${medium_label}" "${medium_dir}"
                     ;;
                 stage)
                     bfe.handler.doStage backup_description agent
@@ -108,7 +108,7 @@ bfe.handler.process()
 
             if [ "${script_has_mounted_medium}" = 1 ]
             then
-                bfe.system.utils.unmountMedium "${description_name}" "${medium_type}" "${medium_label}" "${medium_dir}"
+                bfe.toolbox.utils.unmountMedium "${description_name}" "${medium_type}" "${medium_label}" "${medium_dir}"
             fi
         done
     else
@@ -128,7 +128,7 @@ bfe.handler.checkAndMount()
 
     if [ ! "${action}" = "mount" -a ! "${action}" = "show" ]
     then
-        bfe.system.utils.mountMedium "${description_name}" "${medium_type}" "${medium_label}" "${medium_dir}"
+        bfe.toolbox.utils.mountMedium "${description_name}" "${medium_type}" "${medium_label}" "${medium_dir}"
         local result=$?
     fi
 

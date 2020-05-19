@@ -69,8 +69,8 @@ bfe.toolbox.gitolite.clone()
     done
 
     # Stage the selected repositories.
-    bfe.system.utils.run "${RM_CMD} -rf ${destination_dir}"
-    bfe.system.utils.run "${MKDIR_CMD} -p ${destination_dir}"
+    bfe.toolbox.utils.run "${RM_CMD} -rf ${destination_dir}"
+    bfe.toolbox.utils.run "${MKDIR_CMD} -p ${destination_dir}"
     for repo in ${repositories[@]};
     do
         local include=false
@@ -78,14 +78,14 @@ bfe.toolbox.gitolite.clone()
 
         if [ ${#include_repositories[@]} -gt 0 ]
         then
-            if [ $(bfe.system.utils.starts_with_any_of "${include_repositories[@]}" "${repo}") == "y" ]
+            if [ $(bfe.toolbox.utils.starts_with_any_of "${include_repositories[@]}" "${repo}") == "y" ]
             then
                 local include=true
             else
                 local exclude=true
             fi
         fi
-        if [ $(bfe.system.utils.starts_with_any_of "${exclude_repositories[@]}" "${repo}") == "y" ]
+        if [ $(bfe.toolbox.utils.starts_with_any_of "${exclude_repositories[@]}" "${repo}") == "y" ]
         then
             local exclude=true
         fi
@@ -130,7 +130,7 @@ bfe.toolbox.gitolite.is_exposed_repo()
             local ssh_server_port_ok=false
 
             descriptions.getBackupDescription d "${dn}"
-            if [ $(bfe.system.utils.starts_with_any_of "${gitolite_backup_types[@]}" "`d.type`") == "y" ]
+            if [ $(bfe.toolbox.utils.starts_with_any_of "${gitolite_backup_types[@]}" "`d.type`") == "y" ]
             then
                 local type_ok=true
             fi
@@ -160,7 +160,7 @@ bfe.toolbox.gitolite.is_exposed_repo()
         done
     fi
 
-    if [ $(bfe.system.utils.starts_with_any_of "${include_repositories[@]}" "${repository}") == "y" ]
+    if [ $(bfe.toolbox.utils.starts_with_any_of "${include_repositories[@]}" "${repository}") == "y" ]
     then
         ${ECHO_CMD} "n"
         return 0

@@ -18,9 +18,9 @@ bfe.descriptions.init(){
     bfe.descriptions.filename = `${bfe.descriptions_args_}.backupDescriptionFilename`
 }
 
-bfe.descriptions.filename() { bfe.system.utils.propertyAccessor bfe.descriptions_properties $1 $2
+bfe.descriptions.filename() { bfe.toolbox.utils.propertyAccessor bfe.descriptions_properties $1 $2
 }
-bfe.descriptions.names() { bfe.system.utils.propertyAccessor bfe.descriptions_properties $1 $2
+bfe.descriptions.names() { bfe.toolbox.utils.propertyAccessor bfe.descriptions_properties $1 $2
 }
 
 bfe.descriptions.load()
@@ -104,7 +104,7 @@ bfe.descriptions.getBackupDescription()
     local object_name=$1
     local name=$2
 
-    if [ $(bfe.system.utils.contains "${bfe.descriptions_namesArray[@]}" "${name}") == "n" ]
+    if [ $(bfe.toolbox.utils.contains "${bfe.descriptions_namesArray[@]}" "${name}") == "n" ]
     then
         bfe.system.log.error "Backup description [${name}] does not exist."
     else

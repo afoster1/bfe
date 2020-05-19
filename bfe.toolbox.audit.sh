@@ -14,15 +14,15 @@ bfe.toolbox.audit.verify_audit_hashes()
     local audit_filelist_filename=$2
     local audit_hashes_filename=$3
 
-    bfe.system.utils.run "pushd ${source_dir}"
-    bfe.system.utils.run "rm -rf ${audit_filelist_filename}"
+    bfe.toolbox.utils.run "pushd ${source_dir}"
+    bfe.toolbox.utils.run "rm -rf ${audit_filelist_filename}"
 
     # Audit the files against the filename hashes
     bfe.toolbox.audit.generate_audit_filelist "${source_dir}" "${FIND_CMD} . -type f" "${audit_filelist_filename}" "${audit_hashes_filename}"
-    bfe.system.utils.run "${HASHDEEP_CMD} -v -v -v -r -a -k ${audit_hashes_filename} -f ${audit_filelist_filename}"
-    bfe.system.utils.run "rm -rf ${audit_filelist_filename}"
+    bfe.toolbox.utils.run "${HASHDEEP_CMD} -v -v -v -r -a -k ${audit_hashes_filename} -f ${audit_filelist_filename}"
+    bfe.toolbox.utils.run "rm -rf ${audit_filelist_filename}"
 
-    bfe.system.utils.run "popd"
+    bfe.toolbox.utils.run "popd"
 }
 
 bfe.toolbox.audit.delete_audit_hashes()
@@ -34,7 +34,7 @@ bfe.toolbox.audit.delete_audit_hashes()
 
     if [ -e "${filename}" ]
     then
-        bfe.system.utils.run "rm -rf ${filename}"
+        bfe.toolbox.utils.run "rm -rf ${filename}"
     fi
 }
 
@@ -46,16 +46,16 @@ bfe.toolbox.audit.generate_audit_hashes_using_rsync()
     local audit_filelist_filename=$4
     local audit_hashes_filename=$5
 
-    bfe.system.utils.run "pushd ${source_dir}"
-    bfe.system.utils.run "rm -rf ${audit_filelist_filename}"
-    bfe.system.utils.run "rm -rf ${audit_hashes_filename}"
+    bfe.toolbox.utils.run "pushd ${source_dir}"
+    bfe.toolbox.utils.run "rm -rf ${audit_filelist_filename}"
+    bfe.toolbox.utils.run "rm -rf ${audit_hashes_filename}"
 
     bfe.toolbox.audit.generate_audit_filelist "${source_dir}" "${RSYNC_CMD} -naic --protect-args --out-format=%n ${filters} ${source_dir} ${dest_dir}" "${audit_filelist_filename}" "${audit_hashes_filename}"
 
     # Generate the audit hashes from the filelist.
-    bfe.system.utils.run "${HASHDEEP_CMD} -l -f ${audit_filelist_filename} >${audit_hashes_filename}"
-    bfe.system.utils.run "rm -rf ${audit_filelist_filename}"
-    bfe.system.utils.run "popd"
+    bfe.toolbox.utils.run "${HASHDEEP_CMD} -l -f ${audit_filelist_filename} >${audit_hashes_filename}"
+    bfe.toolbox.utils.run "rm -rf ${audit_filelist_filename}"
+    bfe.toolbox.utils.run "popd"
 }
 
 bfe.toolbox.audit.generate_audit_hashes_using_find()
@@ -64,17 +64,17 @@ bfe.toolbox.audit.generate_audit_hashes_using_find()
     local audit_filelist_filename=$2
     local audit_hashes_filename=$3
 
-    bfe.system.utils.run "pushd ${source_dir}"
-    bfe.system.utils.run "rm -rf ${audit_filelist_filename}"
-    bfe.system.utils.run "rm -rf ${audit_hashes_filename}"
+    bfe.toolbox.utils.run "pushd ${source_dir}"
+    bfe.toolbox.utils.run "rm -rf ${audit_filelist_filename}"
+    bfe.toolbox.utils.run "rm -rf ${audit_hashes_filename}"
 
     bfe.toolbox.audit.generate_audit_filelist "${source_dir}" "${FIND_CMD} . -type f" "${audit_filelist_filename}" "${audit_hashes_filename}"
 
     # Generate the audit hashes from the filelist.
-    bfe.system.utils.run "${HASHDEEP_CMD} -l -f ${audit_filelist_filename} >${audit_hashes_filename}"
-    bfe.system.utils.run "rm -rf ${audit_filelist_filename}"
+    bfe.toolbox.utils.run "${HASHDEEP_CMD} -l -f ${audit_filelist_filename} >${audit_hashes_filename}"
+    bfe.toolbox.utils.run "rm -rf ${audit_filelist_filename}"
 
-    bfe.system.utils.run "popd"
+    bfe.toolbox.utils.run "popd"
 }
 
 bfe.toolbox.audit.generate_audit_filelist()
@@ -88,7 +88,7 @@ bfe.toolbox.audit.generate_audit_filelist()
     local bdf=${bdf##*/}
     local bs=${BASH_SOURCE[0]#./*}
 
-    bfe.system.utils.run "pushd ${source_dir}"
+    bfe.toolbox.utils.run "pushd ${source_dir}"
 
     local filenames=$( ${cmd} )
     IFS=$'\n' read -rd '' -a filenames <<<"${filenames}"
@@ -111,7 +111,7 @@ bfe.toolbox.audit.generate_audit_filelist()
         # themselves or begins with a prefixes known to be problematic for
         # hashdeep
         local problematic_audit_prefixes=( "~$" )
-        if [ ! $(bfe.system.utils.starts_with_any_of "${problematic_audit_prefixes[@]}" "${file_basename}") == "y" ] &&
+        if [ ! $(bfe.toolbox.utils.starts_with_any_of "${problematic_audit_prefixes[@]}" "${file_basename}") == "y" ] &&
            [ ! "${filename}" = "${audit_filelist_filename}" ] &&
            [ ! "${filename}" = "${audit_hashes_filename}" ] &&
            [ ! "${file_basename}" = "${bdf}" ] &&
@@ -121,6 +121,6 @@ bfe.toolbox.audit.generate_audit_filelist()
         fi
     done
 
-    bfe.system.utils.run "popd"
+    bfe.toolbox.utils.run "popd"
 }
 

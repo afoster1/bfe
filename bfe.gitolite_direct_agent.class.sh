@@ -19,9 +19,9 @@ bfe.gitolite_direct_agent.init(){
     bfe.gitolite_direct_agent=true
 }
 
-bfe.gitolite_direct_agent.descriptionName() { bfe.system.utils.propertyAccessor bfe.gitolite_direct_agent_properties $1 $2
+bfe.gitolite_direct_agent.descriptionName() { bfe.toolbox.utils.propertyAccessor bfe.gitolite_direct_agent_properties $1 $2
 }
-bfe.gitolite_direct_agent.descriptions() { bfe.system.utils.propertyAccessor bfe.gitolite_direct_agent_properties $1 $2
+bfe.gitolite_direct_agent.descriptions() { bfe.toolbox.utils.propertyAccessor bfe.gitolite_direct_agent_properties $1 $2
 }
 
 bfe.gitolite_direct_agent.stage()
@@ -37,7 +37,7 @@ bfe.gitolite_direct_agent.backup()
     local destination_dir=$(bfe.toolbox.utils.getBackupDirectory "${description_object_name}")
 
     bfe.toolbox.gitolite.clone "${description_object_name}" "${descriptions}" "${destination_dir}"
-    bfe.system.utils.copyBFE "${bfe_script_directory_}" "${destination_dir}"
+    bfe.toolbox.utils.copyBFE "${bfe_script_directory_}" "${destination_dir}"
 }
 
 bfe.gitolite_direct_agent.restore()

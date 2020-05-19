@@ -38,5 +38,5 @@ bfe.notifier.doNotify()
 ${msg}"
     done
 
-    bfe.system.utils.sendEmail "${email_from}" "${subject}" "${notify_msg}"
+    bfe.toolbox.utils.sendEmail "${email_from}" "${subject}" "${notify_msg}"
 }
