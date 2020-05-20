@@ -32,8 +32,12 @@ args.print
 # Create a notifier
 bfe.notifier notifier args
 
-# Initialise system
-bfe.system.init args notifier
+# Initialise all system components
+bfe.toolbox.utils.init args
+bfe.toolbox.log.init args notifier
+bfe.toolbox.audit.init args
+bfe.toolbox.filesystem.init args
+bfe.toolbox.restic.init args
 echo
 
 # Create a backup descriptions object

@@ -16,9 +16,8 @@ bfe.toolbox.utils.getParentDirectoryOf()
 
 bfe.toolbox.utils.getLogDirectory()
 {
-    # TODO ANFO Use correct "args" variable below.
-    local work_dir=`${bfe_system_args_}.workDir`
-    local log_sub_dir=`${bfe_system_args_}.logSubDir`
+    local work_dir=`${bfe_toolbox_utils_args_}.workDir`
+    local log_sub_dir=`${bfe_toolbox_utils_args_}.logSubDir`
     local dir="${work_dir}/${log_sub_dir}/"
     ${ECHO_CMD} "${dir}"
 }
@@ -455,4 +454,63 @@ bfe.toolbox.utils.run_noerror()
             bfe.toolbox.log.info "Command [${cmd}] returned [$?]."
         fi
     fi
+}
+
+bfe.toolbox.stdout.printMessageAndValue()
+{
+    local msg=$1
+    local varName=$2
+    local varValue=$(${varName})
+
+    shift
+
+    if [ ${#varValue} -gt 0 ]
+    then
+        echo "${msg}$($@)"
+    fi
+}
+
+bfe.toolbox.stdout.printValue()
+{
+    local varName=$1
+    local varValue=$(${varName})
+
+    if [ ${#varValue} -gt 0 ]
+    then
+        echo "${varName}: $($@)"
+    fi
+}
+
+bfe.toolbox.stdout.printValueObscured()
+{
+    local varName=$1
+    local varValue=$(${varName})
+
+    if [ ${#varValue} -gt 0 ]
+    then
+        echo "${varName}: ****"
+    fi
+}
+
+bfe.toolbox.stdout.printString()
+{
+    echo $@
+}
+
+bfe.toolbox.stdout.printArray()
+{
+    local msg=$1
+    shift 1
+    local a b
+    a="declare -a b=$($@)"
+    eval "$a"
+    local list=""
+    local first=true
+    for i in "${b[@]}"
+    do
+        if ! ${first}; then list="${list}, "; fi
+        if ${first}; then first=false; fi
+        list="$list$i"
+    done
+    echo "${msg}${list}"
 }

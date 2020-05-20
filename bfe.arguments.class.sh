@@ -373,34 +373,34 @@ bfe.arguments.readConfigurationFile()
 
 bfe.arguments.print()
 {
-    bfe.system.stdout.printMessageAndValue "Backup Name: " bfe.arguments.backupName
-    bfe.system.stdout.printMessageAndValue "Configuration Filename: " bfe.arguments.configFilename
-    bfe.system.stdout.printMessageAndValue "Passphrase Filename: " bfe.arguments.passphraseFilename
-    bfe.system.stdout.printArray "Backup Groups: " bfe.arguments.backupGroups
-    bfe.system.stdout.printArray "Backup Actions: " bfe.arguments.actions
+    bfe.toolbox.stdout.printMessageAndValue "Backup Name: " bfe.arguments.backupName
+    bfe.toolbox.stdout.printMessageAndValue "Configuration Filename: " bfe.arguments.configFilename
+    bfe.toolbox.stdout.printMessageAndValue "Passphrase Filename: " bfe.arguments.passphraseFilename
+    bfe.toolbox.stdout.printArray "Backup Groups: " bfe.arguments.backupGroups
+    bfe.toolbox.stdout.printArray "Backup Actions: " bfe.arguments.actions
 
     v=`bfe.arguments.verbose`
     if [ "${v}" = true ]
     then
-        bfe.system.stdout.printValueObscured bfe.arguments.passphrase
-        bfe.system.stdout.printValue bfe.arguments.emailPasswordFilename
-        bfe.system.stdout.printValueObscured bfe.arguments.emailPassword
-        bfe.system.stdout.printValue bfe.arguments.backupDescriptionFilename
-        bfe.system.stdout.printValue bfe.arguments.sendEmail
-        bfe.system.stdout.printValue bfe.arguments.emailFrom
-        bfe.system.stdout.printValue bfe.arguments.hostname
-        bfe.system.stdout.printValue bfe.arguments.backupMedium
-        bfe.system.stdout.printValue bfe.arguments.backupMediumLabel
-        bfe.system.stdout.printValue bfe.arguments.workDir
-        bfe.system.stdout.printValue bfe.arguments.backupMediumDir
-        bfe.system.stdout.printValue bfe.arguments.stageSubDir
-        bfe.system.stdout.printValue bfe.arguments.backupSubDir
-        bfe.system.stdout.printValue bfe.arguments.restoreSubDir
-        bfe.system.stdout.printValue bfe.arguments.logSubDir
-        bfe.system.stdout.printValue bfe.arguments.fullBackup
-        bfe.system.stdout.printValue bfe.arguments.useLog
-        bfe.system.stdout.printValue bfe.arguments.dryRun
-        bfe.system.stdout.printValue bfe.arguments.certificateDatabase
+        bfe.toolbox.stdout.printValueObscured bfe.arguments.passphrase
+        bfe.toolbox.stdout.printValue bfe.arguments.emailPasswordFilename
+        bfe.toolbox.stdout.printValueObscured bfe.arguments.emailPassword
+        bfe.toolbox.stdout.printValue bfe.arguments.backupDescriptionFilename
+        bfe.toolbox.stdout.printValue bfe.arguments.sendEmail
+        bfe.toolbox.stdout.printValue bfe.arguments.emailFrom
+        bfe.toolbox.stdout.printValue bfe.arguments.hostname
+        bfe.toolbox.stdout.printValue bfe.arguments.backupMedium
+        bfe.toolbox.stdout.printValue bfe.arguments.backupMediumLabel
+        bfe.toolbox.stdout.printValue bfe.arguments.workDir
+        bfe.toolbox.stdout.printValue bfe.arguments.backupMediumDir
+        bfe.toolbox.stdout.printValue bfe.arguments.stageSubDir
+        bfe.toolbox.stdout.printValue bfe.arguments.backupSubDir
+        bfe.toolbox.stdout.printValue bfe.arguments.restoreSubDir
+        bfe.toolbox.stdout.printValue bfe.arguments.logSubDir
+        bfe.toolbox.stdout.printValue bfe.arguments.fullBackup
+        bfe.toolbox.stdout.printValue bfe.arguments.useLog
+        bfe.toolbox.stdout.printValue bfe.arguments.dryRun
+        bfe.toolbox.stdout.printValue bfe.arguments.certificateDatabase
     fi
 }
 
