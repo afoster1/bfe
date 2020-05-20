@@ -18,11 +18,11 @@ bfe.toolbox.gitolite.clone()
     fi
     if [ -z "${ssh_server}" ]
     then
-        bfe.system.log.error "Gitolite backup description [${description_name}] has no SSH_SERVER property."
+        bfe.toolbox.log.error "Gitolite backup description [${description_name}] has no SSH_SERVER property."
     fi
     if [ -z "${ssh_port}" ]
     then
-        bfe.system.log.error "Gitolite backup description [${description_name}] has no SSH_PORT property."
+        bfe.toolbox.log.error "Gitolite backup description [${description_name}] has no SSH_PORT property."
     fi
 
     # Establish a list of repositories on the gitolite server

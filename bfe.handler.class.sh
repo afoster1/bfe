@@ -102,7 +102,7 @@ bfe.handler.process()
                 show)
                     ;;
                 *)
-                    bfe.system.log.error "Unable to process action '${action}'"
+                    bfe.toolbox.log.error "Unable to process action '${action}'"
                     ;;
             esac
 
@@ -112,7 +112,7 @@ bfe.handler.process()
             fi
         done
     else
-        bfe.system.log.error "Unable to process backup type '${type}'"
+        bfe.toolbox.log.error "Unable to process backup type '${type}'"
     fi
 }
 
@@ -141,9 +141,9 @@ bfe.handler.doStage()
     local agent_name=$2
     local description_name=`${object_name}.name`
 
-    bfe.system.log.highlight "Staging [${description_name}] - Started"
+    bfe.toolbox.log.highlight "Staging [${description_name}] - Started"
     ${agent_name}.stage
-    bfe.system.log.highlight "Staging [${description_name}] - Completed"
+    bfe.toolbox.log.highlight "Staging [${description_name}] - Completed"
 }
 
 bfe.handler.doBackup()
@@ -152,9 +152,9 @@ bfe.handler.doBackup()
     local agent_name=$2
     local description_name=`${object_name}.name`
 
-    bfe.system.log.highlight "Backup [${description_name}] - Started"
+    bfe.toolbox.log.highlight "Backup [${description_name}] - Started"
     ${agent_name}.backup
-    bfe.system.log.highlight "Backup [${description_name}] - Completed"
+    bfe.toolbox.log.highlight "Backup [${description_name}] - Completed"
 }
 
 bfe.handler.doRestore()
@@ -163,9 +163,9 @@ bfe.handler.doRestore()
     local agent_name=$2
     local description_name=`${object_name}.name`
 
-    bfe.system.log.highlight "Restore [${description_name}] - Started"
+    bfe.toolbox.log.highlight "Restore [${description_name}] - Started"
     ${agent_name}.restore
-    bfe.system.log.highlight "Restore [${description_name}] - Completed"
+    bfe.toolbox.log.highlight "Restore [${description_name}] - Completed"
 }
 
 bfe.handler.doVerify()
@@ -174,9 +174,9 @@ bfe.handler.doVerify()
     local agent_name=$2
     local description_name=`${object_name}.name`
 
-    bfe.system.log.highlight "Verify [${description_name}] - Started"
+    bfe.toolbox.log.highlight "Verify [${description_name}] - Started"
     ${agent_name}.verify
-    bfe.system.log.highlight "Verify [${description_name}] - Completed"
+    bfe.toolbox.log.highlight "Verify [${description_name}] - Completed"
 }
 
 bfe.handler.doCleanup()
@@ -185,9 +185,9 @@ bfe.handler.doCleanup()
     local agent_name=$2
     local description_name=`${object_name}.name`
 
-    bfe.system.log.highlight "Cleanup [${description_name}] - Started"
+    bfe.toolbox.log.highlight "Cleanup [${description_name}] - Started"
     ${agent_name}.cleanup
-    bfe.system.log.highlight "Cleanup [${description_name}] - Completed"
+    bfe.toolbox.log.highlight "Cleanup [${description_name}] - Completed"
 }
 
 bfe.handler.doStatus()
@@ -196,7 +196,7 @@ bfe.handler.doStatus()
     local agent_name=$2
     local description_name=`${object_name}.name`
 
-    bfe.system.log.highlight "Status [${description_name}] - Started"
+    bfe.toolbox.log.highlight "Status [${description_name}] - Started"
     ${agent_name}.status
-    bfe.system.log.highlight "Status [${description_name}] - Completed"
+    bfe.toolbox.log.highlight "Status [${description_name}] - Completed"
 }

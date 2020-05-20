@@ -6,6 +6,7 @@
 
 . "${bfe_script_directory_}/bfe.os.commands.class.sh"
 . "${bfe_script_directory_}/bfe.system.class.sh"
+. "${bfe_script_directory_}/bfe.toolbox.log.sh"
 . "${bfe_script_directory_}/bfe.toolbox.utils.sh"
 . "${bfe_script_directory_}/bfe.toolbox.gitolite.sh"
 . "${bfe_script_directory_}/bfe.toolbox.git.sh"

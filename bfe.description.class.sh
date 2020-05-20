@@ -45,24 +45,24 @@ bfe.description.data() { bfe.toolbox.utils.propertyAccessor bfe.description_prop
 
 bfe.description.print()
 {
-    bfe.system.log.info ",--[ `bfe.description.name` ]"
-    bfe.system.log.info "|>Properties"
-    bfe.system.log.info "| Type: `bfe.description.type`"
-    bfe.system.log.info "| Medium: `bfe.description.medium`"
-    bfe.system.log.info "| Medium Label: `bfe.description.mediumLabel`"
-    bfe.system.log.info "| Keep Full: `bfe.description.keepFull`"
-    bfe.system.log.info "| SSH Server Server: `bfe.description.sshServer`"
-    bfe.system.log.info "| SSH Server Port: `bfe.description.sshPort`"
-    bfe.system.log.info "| SSH Server ID: `bfe.description.sshUserId`"
+    bfe.toolbox.log.info ",--[ `bfe.description.name` ]"
+    bfe.toolbox.log.info "|>Properties"
+    bfe.toolbox.log.info "| Type: `bfe.description.type`"
+    bfe.toolbox.log.info "| Medium: `bfe.description.medium`"
+    bfe.toolbox.log.info "| Medium Label: `bfe.description.mediumLabel`"
+    bfe.toolbox.log.info "| Keep Full: `bfe.description.keepFull`"
+    bfe.toolbox.log.info "| SSH Server Server: `bfe.description.sshServer`"
+    bfe.toolbox.log.info "| SSH Server Port: `bfe.description.sshPort`"
+    bfe.toolbox.log.info "| SSH Server ID: `bfe.description.sshUserId`"
     local count=`bfe.description.data count`
     if [ "${count}" -gt 0 ]
     then
-        bfe.system.log.info "|>Data"
+        bfe.toolbox.log.info "|>Data"
         for ((i=0;i < ${count};i++))
         {
-            bfe.system.log.info "| `bfe.description.data [$i]`"
+            bfe.toolbox.log.info "| `bfe.description.data [$i]`"
         }
     fi
-    bfe.system.log.info "\`--"
+    bfe.toolbox.log.info "\`--"
 }
 

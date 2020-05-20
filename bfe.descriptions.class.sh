@@ -70,7 +70,7 @@ bfe.descriptions.load()
                                 local name=${property_value}
                             else
                                 local name=
-                                bfe.system.log.error "Backup description does not start with NAME property."
+                                bfe.toolbox.log.error "Backup description does not start with NAME property."
                             fi
                         else
                             eval "bfe.descriptions_backupDescriptionProperties${name}_+=([${property_name}]=${property_value})"
@@ -86,7 +86,7 @@ bfe.descriptions.load()
                                 unset bfe.descriptions_backupDescriptionData${name}_
                                 declare -g -a bfe.descriptions_backupDescriptionData${name}_ # Indexed array
                             else
-                                bfe.system.log.error "Backup description does not start with NAME property."
+                                bfe.toolbox.log.error "Backup description does not start with NAME property."
                             fi
                         fi
                         eval "bfe.descriptions_backupDescriptionData${name}_+=('${line}')"
@@ -106,7 +106,7 @@ bfe.descriptions.getBackupDescription()
 
     if [ $(bfe.toolbox.utils.contains "${bfe.descriptions_namesArray[@]}" "${name}") == "n" ]
     then
-        bfe.system.log.error "Backup description [${name}] does not exist."
+        bfe.toolbox.log.error "Backup description [${name}] does not exist."
     else
         bfe.description ${object_name} ${bfe.descriptions_args_} ${name}
 

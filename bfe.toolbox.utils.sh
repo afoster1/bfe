@@ -341,13 +341,13 @@ bfe.toolbox.utils.mountMedium()
         then
             if [ $(bfe.toolbox.utils.isOfflineMediaAvailable "${medium_label}") == "n" ]
             then
-                bfe.system.log.error "Backup description [${description_name}] requires backup medium labelled [${medium_label}] which is unavailable... (Note: May also need root access.)"
+                bfe.toolbox.log.error "Backup description [${description_name}] requires backup medium labelled [${medium_label}] which is unavailable... (Note: May also need root access.)"
             else
                 if [ $(bfe.toolbox.utils.mountOfflineMedia "${medium_label}" "${medium_dir}") == "n" ]
                 then
-                    bfe.system.log.error "Backup description [${description_name}] requires backup medium labelled [${medium_label}] which is not mounted."
+                    bfe.toolbox.log.error "Backup description [${description_name}] requires backup medium labelled [${medium_label}] which is not mounted."
                 else
-                    bfe.system.log.info "Backup medium [${medium_label}] mounted."
+                    bfe.toolbox.log.info "Backup medium [${medium_label}] mounted."
                     return 1
                 fi
             fi
@@ -368,9 +368,9 @@ bfe.toolbox.utils.unmountMedium()
     then
         if [ $(bfe.toolbox.utils.unmountOfflineMedia "${medium_label}" "${medium_dir}") == "n" ]
         then
-            bfe.system.log.error "Backup description [${description_name}], unable to return to unmounted state for backup medium labelled [${medium_label}]."
+            bfe.toolbox.log.error "Backup description [${description_name}], unable to return to unmounted state for backup medium labelled [${medium_label}]."
         else
-            bfe.system.log.info "Backup medium [${medium_label}] unmounted."
+            bfe.toolbox.log.info "Backup medium [${medium_label}] unmounted."
         fi
     fi
 }
@@ -414,7 +414,7 @@ bfe.toolbox.utils.run()
     local cmd=`${ECHO_CMD} "${cmd}" | ${SED_CMD} -r 's/^PASSPHRASE=[^ ]* /PASSPHRASE=**** /g'`
     local cmd=`${ECHO_CMD} "${cmd}" | ${SED_CMD} -r 's/smtp-auth-password=[^ ]* /smtp-auth-password=**** /g'`
 
-    bfe.system.log.cmd "${cmd}"
+    bfe.toolbox.log.cmd "${cmd}"
 
     if ! `${bfe_toolbox_utils_args_}.dryRun`
     then
@@ -427,7 +427,7 @@ bfe.toolbox.utils.run()
 
         if [ $? -ne 0 ]
         then
-            bfe.system.log.error "Command [${cmd}] returned [$?]."
+            bfe.toolbox.log.error "Command [${cmd}] returned [$?]."
         fi
     fi
 }
@@ -439,7 +439,7 @@ bfe.toolbox.utils.run_noerror()
     local cmd=`${ECHO_CMD} "${cmd}" | ${SED_CMD} -r 's/^PASSPHRASE=[^ ]* /PASSPHRASE=**** /g'`
     local cmd=`${ECHO_CMD} "${cmd}" | ${SED_CMD} -r 's/smtp-auth-password=[^ ]* /smtp-auth-password=**** /g'`
 
-    bfe.system.log.cmd "${cmd}"
+    bfe.toolbox.log.cmd "${cmd}"
 
     if ! `${bfe_toolbox_utils_args_}.dryRun`
     then
@@ -452,7 +452,7 @@ bfe.toolbox.utils.run_noerror()
 
         if [ $? -ne 0 ]
         then
-            bfe.system.log.info "Command [${cmd}] returned [$?]."
+            bfe.toolbox.log.info "Command [${cmd}] returned [$?]."
         fi
     fi
 }

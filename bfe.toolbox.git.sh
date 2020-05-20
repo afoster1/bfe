@@ -13,14 +13,14 @@ bfe.toolbox.git.clone()
     local repo_name=${repo_name%%.git}
     if [ -z "${repo_name}" ]
     then
-        bfe.system.log.error "Unable to establish the repository name from url \"${url}\""
+        bfe.toolbox.log.error "Unable to establish the repository name from url \"${url}\""
     fi
 
     # Show clone details.
-    bfe.system.log.info ",--[ ${repo_name} ]"
-    bfe.system.log.info "| URL : ${url}"
-    bfe.system.log.info "| Folder : ${destination_dir}/${repo_name}"
-    bfe.system.log.info "\`--"
+    bfe.toolbox.log.info ",--[ ${repo_name} ]"
+    bfe.toolbox.log.info "| URL : ${url}"
+    bfe.toolbox.log.info "| Folder : ${destination_dir}/${repo_name}"
+    bfe.toolbox.log.info "\`--"
 
     # Before we begin, ensure we are in the correct directory and that the git
     # clone directory doesn't already exist.
@@ -60,14 +60,14 @@ bfe.toolbox.git.mirror()
     local repo_name=${repo_name%%.git}
     if [ -z "${repo_name}" ]
     then
-        bfe.system.log.error "Unable to determine the repository name from url \"${url}\""
+        bfe.toolbox.log.error "Unable to determine the repository name from url \"${url}\""
     fi
 
     # Show clone details.
-    bfe.system.log.info ",--[ ${repo_name} ]"
-    bfe.system.log.info "| URL : ${url}"
-    bfe.system.log.info "| Folder : ${dest}/${repo_name}"
-    bfe.system.log.info "\`--"
+    bfe.toolbox.log.info ",--[ ${repo_name} ]"
+    bfe.toolbox.log.info "| URL : ${url}"
+    bfe.toolbox.log.info "| Folder : ${dest}/${repo_name}"
+    bfe.toolbox.log.info "\`--"
 
     # Before we begin, ensure we are in the correct directory and that the git
     # clone directory doesn't already exist.
