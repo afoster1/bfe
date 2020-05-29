@@ -408,6 +408,9 @@ bfe.toolbox.utils.contains()
 
 bfe.toolbox.utils.run()
 {
+    local log_filename=$(bfe.toolbox.log.getLogFilename)
+    local error_filename=$(bfe.toolbox.log.getErrorFilename)
+
     # Strip out any confidential information from the command
     local cmd=`${ECHO_CMD} "$@" | ${SED_CMD} -r 's/^RESTIC_PASSWORD=[^ ]* /RESTIC_PASSWORD=**** /g'`
     local cmd=`${ECHO_CMD} "${cmd}" | ${SED_CMD} -r 's/^PASSPHRASE=[^ ]* /PASSPHRASE=**** /g'`
@@ -419,7 +422,7 @@ bfe.toolbox.utils.run()
     then
         if `${bfe_toolbox_utils_args_}.useLog`
         then
-            eval "$@" >> ${bfe_system_log_filename_}.log 2>> ${bfe_system_log_filename_}.err
+            eval "$@" >> ${log_filename} 2>> ${error_filename}
         else
             eval "$@"
         fi
@@ -434,6 +437,9 @@ bfe.toolbox.utils.run()
 # TODO run_noerror() and run() should be rolled into one as the functionality is so similar
 bfe.toolbox.utils.run_noerror()
 {
+    local log_filename=$(bfe.toolbox.log.getLogFilename)
+    local error_filename=$(bfe.toolbox.log.getErrorFilename)
+
     local cmd=`${ECHO_CMD} "$@" | ${SED_CMD} -r 's/^RESTIC_PASSWORD=[^ ]* /RESTIC_PASSWORD=**** /g'`
     local cmd=`${ECHO_CMD} "${cmd}" | ${SED_CMD} -r 's/^PASSPHRASE=[^ ]* /PASSPHRASE=**** /g'`
     local cmd=`${ECHO_CMD} "${cmd}" | ${SED_CMD} -r 's/smtp-auth-password=[^ ]* /smtp-auth-password=**** /g'`
@@ -444,7 +450,7 @@ bfe.toolbox.utils.run_noerror()
     then
         if `${bfe_toolbox_utils_args_}.useLog`
         then
-            eval "$@" >> ${LOG_FILENAME}.log 2>> ${LOG_FILENAME}.err
+            eval "$@" >> ${log_filename} 2>> ${error_filename}
         else
             eval "$@"
         fi

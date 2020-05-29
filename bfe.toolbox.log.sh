@@ -30,6 +30,16 @@ bfe.toolbox.log.init()
     fi
 }
 
+bfe.toolbox.log.getLogFilename()
+{
+    ${ECHO_CMD} "${bfe_toolbox_log_filename_}.log"
+}
+
+bfe.toolbox.log.getErrorFilename()
+{
+    ${ECHO_CMD} "${bfe_toolbox_log_filename_}.err"
+}
+
 bfe.toolbox.log.cmd() {
     if [ "`${bfe_toolbox_log_args_}.useLog`" = true ]
     then
