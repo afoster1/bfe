@@ -29,7 +29,7 @@ bfe.notifier.notifyError()
 bfe.notifier.doNotify()
 {
     local subject=$1
-    local email_from=`${bfe.notifier_args_}.emailFrom`
+    local email_to=`${bfe.notifier_args_}.emailFrom` # email_to is the same as email_from, Odd!!
     
     local notify_msg=
     for msg in "${bfe.notifier_msgs_[@]}"
@@ -38,5 +38,5 @@ bfe.notifier.doNotify()
 ${msg}"
     done
 
-    bfe.toolbox.utils.sendEmail "${email_from}" "${subject}" "${notify_msg}"
+    bfe.toolbox.utils.sendEmailSnail "${email_to}" "${subject}" "${notify_msg}"
 }

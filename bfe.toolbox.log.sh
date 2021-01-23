@@ -2,11 +2,13 @@
 
 # fields
 bfe_toolbox_log_args_= # Command line arguments
+bfe_toolbox_log_notifier_= # Notifier
 bfe_toolbox_log_filename_= # The filename to be used for the log
 
 bfe.toolbox.log.init()
 {
     bfe_toolbox_log_args_=$1
+    bfe_toolbox_log_notifier_=$2
     local backup_name=`${bfe_toolbox_log_args_}.backupName`
     local hostname=`${bfe_toolbox_log_args_}.hostname`
     local log_dir=`bfe.toolbox.utils.getLogDirectory`
@@ -78,8 +80,8 @@ bfe.toolbox.log.error() {
 
     if [ "`${bfe_toolbox_log_args_}.sendEmail`" = true ]
     then
-        ${bfe_system_notifier_}.append "ERROR: $@"
-        ${bfe_system_notifier_}.notifyError
+        ${bfe_toolbox_log_notifier_}.append "ERROR: $@"
+        ${bfe_toolbox_log_notifier_}.notifyError
     fi
     exit 1
 }
