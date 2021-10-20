@@ -49,6 +49,7 @@ bfe.toolbox.restic.restore()
     local destination_dir=$2
     local passphrase=$3
 
+    bfe.toolbox.utils.run "${RM_CMD} -rf ${destination_dir}"
     bfe.toolbox.utils.run "${MKDIR_CMD} -p ${destination_dir}"
     bfe.toolbox.utils.run "RESTIC_PASSWORD=${passphrase} ${RESTIC_CMD} restore latest --repo ${source_dir} --target ${destination_dir}/"
 }
