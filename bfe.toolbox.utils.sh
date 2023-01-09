@@ -163,14 +163,15 @@ bfe.toolbox.utils.copyBFE()
 bfe.toolbox.utils.sendEmailSnail()
 {
     # Note: To setup s-nail to send emails via gmail, setup the mailer
-    # initialisation in your home folder, ~/.mailrc:
+    # initialisation in your home folder, ~/.mailrc, as follows:
+    # For s-nail v14.10 and later:
     #    set smtp-use-starttls
-    #    set ssl-verify=ignore
-    #    set smtp=smtp://smtp.gmail.com:587
     #    set smtp-auth=login
-    #    set smtp-auth-user=[from email address]
     #    set from=[from email address]
+    #    set v15-compat
+    #    set mta="[username]%40gmail.com:[password]@smtp.gmail.com"
     local email_to=$1
+    local email_username=$(${ECHO_CMD} "${email_to}" | ${CUT_CMD} -d@ -f1)
     local subject=$2
     local message=$3
     local send_email=`${bfe_toolbox_utils_args_}.sendEmail`
@@ -178,7 +179,7 @@ bfe.toolbox.utils.sendEmailSnail()
 
     if [ "${send_email}" = true ]
     then
-        bfe.toolbox.utils.run "${ECHO_CMD} \"${message}\" | ${SNAIL_CMD} -S smtp-auth-password=${email_password} -s \"${subject}\" ${email_to}"
+        bfe.toolbox.utils.run "${ECHO_CMD} \"${message}\" | ${SNAIL_CMD} -S mta=\"smtps://${email_username}%40gmail.com:${email_password}@smtp.gmail.com\" -s \"${subject}\" ${email_to}"
     fi
 }
 
